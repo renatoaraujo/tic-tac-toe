@@ -1,0 +1,11 @@
+plugins:
+  phpcodesniffer:
+    enabled: true
+    config:
+    	standard: "PSR2"
+  sonar-php:
+    enabled: true
+    config:
+      tests_patterns:
+        - src/**
+        - test/**

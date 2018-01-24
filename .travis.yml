@@ -1,0 +1,18 @@
+language: php
+php:
+  - '7.1'
+  - hhvm
+
+sudo: false
+
+before_install:
+  - composer self-update
+
+install:
+  - composer install --prefer-source --no-interaction --dev
+
+script: ./bin/phpunit
+
+notifications:
+    on_success: never
+    on_failure: always

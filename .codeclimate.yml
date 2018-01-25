@@ -12,6 +12,7 @@ exclude_patterns:
  - "*.json"
  - "*.dist"
  - "*.xml"
+ - "/tests/**"
 plugins:
   phpcodesniffer:
     enabled: true

@@ -5,6 +5,13 @@ exclude_patterns:
  - "/public/**"
  - "/var/**"
  - "/vendor/**"
+ - ".*"
+ - "*.yml"
+ - "*.md"
+ - "*.lock"
+ - "*.json"
+ - "*.dist"
+ - "*.xml"
 plugins:
   phpcodesniffer:
     enabled: true

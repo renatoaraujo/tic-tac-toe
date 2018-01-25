@@ -20,5 +20,6 @@ class MoveService implements MoveInterface
     }
 
     private function createMoveObject(): void
-    {}
+    {
+    }
 }

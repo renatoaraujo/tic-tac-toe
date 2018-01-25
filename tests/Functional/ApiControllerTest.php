@@ -20,14 +20,18 @@ class ApiControllerTest extends WebTestCase
     }
 
     public function testMakeMoveBotWins(): void
-    {}
+    {
+    }
 
     public function testInvalidMakeMoveRequest(): void
-    {}
+    {
+    }
 
     public function testMakeMovePlayerWins(): void
-    {}
+    {
+    }
 
     public function testMakeMoveTiedGame(): void
-    {}
+    {
+    }
 }

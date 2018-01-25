@@ -1,11 +1,20 @@
+version: "2"
+exclude_patterns:
+ - "/bin/**"
+ - "/config/**"
+ - "/public/**"
+ - "/var/**"
+ - "/vendor/**"
 plugins:
   phpcodesniffer:
     enabled: true
     config:
-    	standard: "PSR2"
-  sonar-php:
+      file_extensions: "php"
+      standard: "PSR1,PSR2"
+      ignore_warnings: true
+      encoding: utf-8
+  phpmd:
     enabled: true
     config:
-      tests_patterns:
-        - src/**
-        - test/**
+      file_extensions: "php"
+      rulesets: "unusedcode,codesize,naming"

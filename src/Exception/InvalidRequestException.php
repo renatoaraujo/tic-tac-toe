@@ -9,4 +9,5 @@ namespace TicTacToe\Exception;
  * @author Renato Rodrigues de Araujo <renato.r.araujo@gmail.com>
  */
 class InvalidRequestException extends \Exception
-{}
+{
+}

@@ -1,4 +1,7 @@
 {
+    "codeclimate/php-test-reporter": {
+        "version": "0.3.x-dev"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -23,6 +26,15 @@
     "doctrine/lexer": {
         "version": "v1.0.1"
     },
+    "guzzle/guzzle": {
+        "version": "v3.8.1"
+    },
+    "padraic/humbug_get_contents": {
+        "version": "1.0.4"
+    },
+    "padraic/phar-updater": {
+        "version": "1.0.4"
+    },
     "paragonie/random_compat": {
         "version": "v2.0.11"
     },
@@ -40,6 +52,9 @@
     },
     "ramsey/uuid": {
         "version": "3.7.3"
+    },
+    "satooshi/php-coveralls": {
+        "version": "v1.1.0"
     },
     "sensio/framework-extra-bundle": {
         "version": "4.0",
@@ -142,6 +157,9 @@
             "version": "4.0",
             "ref": "cda8b550123383d25827705d05a42acf6819fe4e"
         }
+    },
+    "symfony/stopwatch": {
+        "version": "v4.0.3"
     },
     "symfony/var-dumper": {
         "version": "v4.0.3"

@@ -10,12 +10,21 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @author Renato Rodrigues de Araujo <renato.r.araujo@gmail.com>
  */
-class Board implements EntityInterface
+class Board
 {
     /**
      * @var ArrayCollection
      */
     private $moves;
+
+    public function __construct(?ArrayCollection $moves = null)
+    {
+        if (!is_null($moves)) {
+            $this->moves = $moves;
+        }
+
+        return $this;
+    }
 
     /**
      * @return ArrayCollection
@@ -34,13 +43,5 @@ class Board implements EntityInterface
     {
         $this->moves->add($moves);
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray(): array
-    {
-        return get_object_vars($this);
     }
 }

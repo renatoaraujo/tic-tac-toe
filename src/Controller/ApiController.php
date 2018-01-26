@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ApiController
@@ -22,8 +23,10 @@ class ApiController extends Controller
      *
      * @return JsonResponse
      */
-    public function moveAction(): JsonResponse
+    public function moveAction(Request $request): JsonResponse
     {
-        return $this->json([]);
+        $game = $this->get('TicTacToe\Service\GameService')
+            ->createGame($request->getContent());
+        return $this->json($game);
     }
 }

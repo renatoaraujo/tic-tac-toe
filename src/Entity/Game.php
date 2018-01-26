@@ -8,7 +8,7 @@ namespace TicTacToe\Entity;
  *
  * @author Renato Rodrigues de Araujo <renato.r.araujo@gmail.com>
  */
-class Game implements EntityInterface
+class Game
 {
     /**
      * @var string
@@ -23,22 +23,22 @@ class Game implements EntityInterface
     /**
      * @var boolean
      */
-    private $isTied;
+    private $isTied = false;
 
     /**
      * @var boolean
      */
-    private $isBotWinner;
+    private $isBotWinner = false;
 
     /**
      * @var boolean
      */
-    private $isPlayerWinner;
+    private $isPlayerWinner = false;
 
     /**
      * @var Board
      */
-    private $board;
+    private $boardState;
 
     /**
      * @return string
@@ -138,27 +138,19 @@ class Game implements EntityInterface
     /**
      * @return Board
      */
-    public function getBoard(): Board
+    public function getBoardState(): Board
     {
-        return $this->board;
+        return $this->boardState;
     }
 
     /**
-     * @param Board $board
+     * @param Board $boardState
      *
      * @return Game
      */
-    public function setBoard(Board $board): Game
+    public function setBoardState(Board $boardState): Game
     {
-        $this->board = $board;
+        $this->boardState = $boardState;
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray(): array
-    {
-        return get_object_vars($this);
     }
 }

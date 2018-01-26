@@ -8,7 +8,7 @@ namespace TicTacToe\Entity;
  *
  * @author Renato Rodrigues de Araujo <renato.r.araujo@gmail.com>
  */
-class Move implements EntityInterface
+class Move
 {
     /**
      * @var integer
@@ -71,13 +71,5 @@ class Move implements EntityInterface
     public function setUnit(string $unit): void
     {
         $this->unit = $unit;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray(): array
-    {
-        return get_object_vars($this);
     }
 }

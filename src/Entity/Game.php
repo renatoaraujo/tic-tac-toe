@@ -92,13 +92,11 @@ class Game
     }
 
     /**
-     * @param bool $isTied
-     *
      * @return Game
      */
-    public function setIsTied(bool $isTied): Game
+    public function setTied(): Game
     {
-        $this->isTied = $isTied;
+        $this->isTied = true;
         return $this;
     }
 
@@ -111,13 +109,11 @@ class Game
     }
 
     /**
-     * @param bool $isBotWinner
-     *
      * @return Game
      */
-    public function setIsBotWinner(bool $isBotWinner): Game
+    public function setBotWinner(): Game
     {
-        $this->isBotWinner = $isBotWinner;
+        $this->isBotWinner = true;
         return $this;
     }
 
@@ -130,13 +126,11 @@ class Game
     }
 
     /**
-     * @param bool $isPlayerWinner
-     *
      * @return Game
      */
-    public function setIsPlayerWinner(bool $isPlayerWinner): Game
+    public function setPlayerWinner(): Game
     {
-        $this->isPlayerWinner = $isPlayerWinner;
+        $this->isPlayerWinner = true;
         return $this;
     }
 

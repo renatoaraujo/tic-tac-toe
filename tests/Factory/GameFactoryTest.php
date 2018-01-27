@@ -2,9 +2,12 @@
 
 namespace TicTacToe\Tests\Factory;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use TicTacToe\Entity\Board;
+use TicTacToe\Factory\BoardFactory;
 use TicTacToe\Factory\GameFactory;
+use TicTacToe\Factory\MoveFactory;
 use TicTacToe\Util\GameUnit;
 
 class GameFactoryTest extends TestCase
@@ -14,16 +17,66 @@ class GameFactoryTest extends TestCase
      */
     private $factory;
 
+    /**
+     * @var ArrayCollection
+     */
+    private static $staticMoves;
+
+    /**
+     * @var Board
+     */
+    private $board;
+
+    /**
+     * Create static moves for testing
+     */
+    public static function setUpBeforeClass()
+    {
+        $boardState = [
+            ["X", "", "O"],
+            ["O", "O", ""],
+            ["X", "X", "X"]
+        ];
+
+        $moveFactory = new MoveFactory();
+        self::$staticMoves = $moveFactory->createMovesFromBoardState($boardState);
+    }
+
     public function setUp()
     {
         $this->factory = new GameFactory();
+        $boardFactory = new BoardFactory();
+        $this->board = $boardFactory->createBoardWithMoves(self::$staticMoves);
     }
 
-    public function testCreateNewGame(): void
+    public function testCreateGame(): void
     {
-        $board = new Board();
-        $game = $this->factory->createGameNewGameWithBoard(GameUnit::X_UNIT, $board);
-        $this->assertInstanceOf("TicTacToe\Entity\Game", $game);
+        $game = $this->factory->createGame(GameUnit::X_UNIT, $this->board);
         $this->assertSame(GameUnit::O_UNIT, $game->getBotUnit());
+        $this->assertSame(false, $game->isTied());
+    }
+
+    public function testCreateGameWithBotWinner(): void
+    {
+        $game = $this->factory->createGame(GameUnit::X_UNIT, $this->board, GameUnit::O_UNIT);
+        $this->assertTrue($game->isBotWinner());
+        $this->assertTrue(!$game->isPlayerWinner());
+        $this->assertTrue(!$game->isTied());
+    }
+
+    public function testCreateGameWithPlayerWinner(): void
+    {
+        $game = $this->factory->createGame(GameUnit::X_UNIT, $this->board, GameUnit::X_UNIT);
+        $this->assertTrue($game->isPlayerWinner());
+        $this->assertTrue(!$game->isBotWinner());
+        $this->assertTrue(!$game->isTied());
+    }
+
+    public function testCreateTiedGame(): void
+    {
+        $game = $this->factory->createGame(GameUnit::X_UNIT, $this->board, null, true);
+        $this->assertTrue($game->isTied());
+        $this->assertTrue(!$game->isBotWinner());
+        $this->assertTrue(!$game->isPlayerWinner());
     }
 }

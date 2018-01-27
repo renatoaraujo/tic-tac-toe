@@ -14,22 +14,31 @@ use TicTacToe\Util\GameUnit;
  */
 class GameFactory
 {
-    public function createGameNewGameWithBoard(string $playerUnit, Board $board): Game
-    {
-        return $this->createGame($playerUnit, $board);
-    }
-
     /**
      * @param string $playerUnit
      * @param null|Board $board
+     * @param null|string $unitWinner
+     * @param bool $isTied
      *
      * @return Game
      */
-    protected function createGame(string $playerUnit, ?Board $board = null): Game
-    {
+    public function createGame(
+        string $playerUnit,
+        ?Board $board = null,
+        ?string $unitWinner = null,
+        bool $isTied = false
+    ): Game {
         $game = new Game();
         $game->setPlayerUnit($playerUnit);
         $game->setBotUnit(GameUnit::getInverseUnit($playerUnit));
+
+        if (!is_null($unitWinner) && !$isTied) {
+            ($unitWinner === $playerUnit) ? $game->setPlayerWinner() : $game->setBotWinner();
+        }
+
+        if ($isTied) {
+            $game->setTied();
+        }
 
         if (!is_null($board)) {
             $game->setBoardState($board);

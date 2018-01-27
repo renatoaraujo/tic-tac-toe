@@ -49,7 +49,7 @@ class GameService implements MoveInterface
         $board = $this->container->get('TicTacToe\Factory\BoardFactory')
             ->createBoardWithMoves($moves);
         $game = $this->container->get('TicTacToe\Factory\GameFactory')
-            ->createGameNewGameWithBoard($requestGame->playerUnit, $board);
+            ->createGame($requestGame->playerUnit, $board);
         return $game;
     }
 }

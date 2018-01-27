@@ -7,6 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use TicTacToe\Exception\InvalidRequestException;
+use TicTacToe\Util\Validator\ApiRequestValidator;
 
 /**
  * Class ApiController
@@ -21,12 +23,19 @@ class ApiController extends Controller
      * @Route("/move")
      * @Method("POST")
      *
+     * @param Request $request
+     *
      * @return JsonResponse
+     * @throws InvalidRequestException
      */
     public function moveAction(Request $request): JsonResponse
     {
-        $game = $this->get('TicTacToe\Service\GameService')
-            ->createGame($request->getContent());
+        if (!ApiRequestValidator::isValidRequestBodyContent($request->getContent())) {
+            throw new InvalidRequestException();
+        }
+
+        $game = $this->get('TicTacToe\Service\GameService')->createGame($request->getContent());
+
         return $this->json($game);
     }
 }

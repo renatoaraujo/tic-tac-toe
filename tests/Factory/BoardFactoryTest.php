@@ -38,6 +38,6 @@ class BoardFactoryTest extends TestCase
         $moveFactory = new MoveFactory();
         $moves = $moveFactory->createMovesFromBoardState(self::BOARD_STATE);
         $board = $this->factory->createBoardWithMoves($moves);
-        $this->assertCount(9, $board->getMoves()->toArray());
+        $this->assertAttributeCount(9, 'moves', $board);
     }
 }

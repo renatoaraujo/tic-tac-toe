@@ -41,6 +41,11 @@ class Game
     private $boardState;
 
     /**
+     * @var Move
+     */
+    private $nextMove;
+
+    /**
      * @return string
      */
     public function getBotUnit(): string
@@ -152,5 +157,21 @@ class Game
     {
         $this->boardState = $boardState;
         return $this;
+    }
+
+    /**
+     * @return Move
+     */
+    public function getNextMove(): ?Move
+    {
+        return $this->nextMove;
+    }
+
+    /**
+     * @param Move $nextMove
+     */
+    public function setNextMove(Move $nextMove): void
+    {
+        $this->nextMove = $nextMove;
     }
 }

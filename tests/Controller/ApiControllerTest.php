@@ -21,11 +21,13 @@ class ApiControllerTest extends WebTestCase
                 ["X", "O", "O"],
                 ["O", "X", "X"]
             ]
-
         ]);
         $client = static::createClient();
         $client->request('POST', '/api/move', [], [], [], $requestContent);
         $this->assertSame(200, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->headers->contains('Content-Type', 'application/json'));
+
+        $contentBody = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('nextMove', $contentBody);
     }
 }

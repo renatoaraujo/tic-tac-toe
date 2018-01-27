@@ -33,7 +33,7 @@ class BoardFactoryTest extends TestCase
         $this->factory = new BoardFactory();
     }
 
-    public function testCreateBoardFromRequest(): void
+    public function testCreateBoardWithMoves(): void
     {
         $moveFactory = new MoveFactory();
         $moves = $moveFactory->createMovesFromBoardState(self::BOARD_STATE);

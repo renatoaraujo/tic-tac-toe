@@ -3,7 +3,6 @@
 namespace TicTacToe\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ApiControllerTest
@@ -25,13 +24,7 @@ class ApiControllerTest extends WebTestCase
 
         ]);
         $client = static::createClient();
-        $client->request(
-            Request::METHOD_POST,
-            '/api/move',
-            [],
-            [],
-            [],
-            $requestContent);
+        $client->request('POST', '/api/move', [], [], [], $requestContent);
         $this->assertSame(200, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->headers->contains('Content-Type', 'application/json'));
     }

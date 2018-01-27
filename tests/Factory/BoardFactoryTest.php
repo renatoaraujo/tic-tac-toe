@@ -50,7 +50,7 @@ class BoardFactoryTest extends TestCase
      */
     public function testCreateBoardWithMoves(): void
     {
-        $board = $this->factory->createBoardWithMoves(self::$staticMoves);
+        $board = $this->factory->createBoard(self::$staticMoves);
         $this->assertAttributeCount(9, 'moves', $board);
     }
 }

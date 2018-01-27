@@ -18,25 +18,23 @@ class GameFactory
      * @param string $playerUnit
      * @param null|Board $board
      * @param null|string $unitWinner
-     * @param bool $isTied
      *
      * @return Game
      */
     public function createGame(
         string $playerUnit,
         ?Board $board = null,
-        ?string $unitWinner = null,
-        bool $isTied = false
+        ?string $unitWinner = null
     ): Game {
         $game = new Game();
         $game->setPlayerUnit($playerUnit);
         $game->setBotUnit(GameUnit::getInverseUnit($playerUnit));
 
-        if (!is_null($unitWinner) && !$isTied) {
+        if (!is_null($unitWinner)) {
             ($unitWinner === $playerUnit) ? $game->setPlayerWinner() : $game->setBotWinner();
         }
 
-        if ($isTied) {
+        if ($board->isCompleted() && is_null($unitWinner)) {
             $game->setTied();
         }
 

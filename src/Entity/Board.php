@@ -17,6 +17,16 @@ class Board
      */
     private $moves;
 
+    /**
+     * @var bool
+     */
+    private $isCompleted = false;
+
+    /**
+     * Board constructor.
+     *
+     * @param ArrayCollection|null $moves
+     */
     public function __construct(?ArrayCollection $moves = null)
     {
         if (!is_null($moves)) {
@@ -43,5 +53,22 @@ class Board
     {
         $this->moves->add($moves);
         return $this;
+    }
+
+    /**
+     * @return Board
+     */
+    public function setCompleted(): Board
+    {
+        $this->isCompleted = true;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompleted(): bool
+    {
+        return $this->isCompleted;
     }
 }

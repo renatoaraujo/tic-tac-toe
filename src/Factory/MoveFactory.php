@@ -5,6 +5,12 @@ namespace TicTacToe\Factory;
 use Doctrine\Common\Collections\ArrayCollection;
 use TicTacToe\Entity\Move;
 
+/**
+ * Class MoveFactory
+ * @package TicTacToe\Factory
+ *
+ * @author Renato Rodrigues de Araujo <renato.r.araujo@gmail.com>
+ */
 class MoveFactory
 {
     /**
@@ -24,7 +30,14 @@ class MoveFactory
         return $moves;
     }
 
-    protected function createMove(string $unit, int $coordX, int $coordY): Move
+    /**
+     * @param string $unit
+     * @param int $coordX
+     * @param int $coordY
+     *
+     * @return Move
+     */
+    public function createMove(string $unit, int $coordX, int $coordY): Move
     {
         $move = new Move();
         $move->setCoordX($coordX);

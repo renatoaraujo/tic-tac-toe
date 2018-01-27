@@ -33,8 +33,8 @@ class GameFactoryTest extends TestCase
     public static function setUpBeforeClass()
     {
         $boardState = [
-            ["X", "", "O"],
-            ["O", "O", ""],
+            ["X", "O", "O"],
+            ["O", "O", "X"],
             ["X", "X", "X"]
         ];
 
@@ -46,14 +46,13 @@ class GameFactoryTest extends TestCase
     {
         $this->factory = new GameFactory();
         $boardFactory = new BoardFactory();
-        $this->board = $boardFactory->createBoardWithMoves(self::$staticMoves);
+        $this->board = $boardFactory->createBoard(self::$staticMoves);
     }
 
     public function testCreateGame(): void
     {
         $game = $this->factory->createGame(GameUnit::X_UNIT, $this->board);
         $this->assertSame(GameUnit::O_UNIT, $game->getBotUnit());
-        $this->assertSame(false, $game->isTied());
     }
 
     public function testCreateGameWithBotWinner(): void
@@ -74,7 +73,7 @@ class GameFactoryTest extends TestCase
 
     public function testCreateTiedGame(): void
     {
-        $game = $this->factory->createGame(GameUnit::X_UNIT, $this->board, null, true);
+        $game = $this->factory->createGame(GameUnit::X_UNIT, $this->board, null);
         $this->assertTrue($game->isTied());
         $this->assertTrue(!$game->isBotWinner());
         $this->assertTrue(!$game->isPlayerWinner());

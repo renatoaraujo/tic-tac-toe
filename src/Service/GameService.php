@@ -47,7 +47,7 @@ class GameService implements MoveInterface
         $moves = $this->container->get('TicTacToe\Factory\MoveFactory')
             ->createMovesFromBoardState($requestGame->boardState);
         $board = $this->container->get('TicTacToe\Factory\BoardFactory')
-            ->createBoardWithMoves($moves);
+            ->createBoard($moves);
         $game = $this->container->get('TicTacToe\Factory\GameFactory')
             ->createGame($requestGame->playerUnit, $board);
         return $game;

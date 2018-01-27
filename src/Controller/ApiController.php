@@ -20,7 +20,7 @@ use TicTacToe\Util\Validator\ApiRequestValidator;
 class ApiController extends Controller
 {
     /**
-     * @Route("/move")
+     * @Route("/move", defaults={"_format": "json"})
      * @Method("POST")
      *
      * @param Request $request
@@ -30,7 +30,7 @@ class ApiController extends Controller
      */
     public function moveAction(Request $request): JsonResponse
     {
-        if (!ApiRequestValidator::isValidRequestBodyContent($request->getContent())) {
+        if (!ApiRequestValidator::isValid($request->getContent())) {
             throw new InvalidRequestException();
         }
 

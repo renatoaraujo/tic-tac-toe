@@ -20,7 +20,7 @@ class ApiControllerTest extends WebTestCase
                 ["X", "O", ""],
                 ["X", "O", "O"],
                 ["O", "X", "X"]
-            ]
+            ],
         ]);
         $client = static::createClient();
         $client->request('POST', '/api/move', [], [], [], $requestContent);
@@ -29,5 +29,26 @@ class ApiControllerTest extends WebTestCase
 
         $contentBody = json_decode($client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('nextMove', $contentBody);
+    }
+
+    public function testInvalidMakeMove(): void
+    {
+        $invalidRequestContent = json_encode([
+            "playerUnit" => "X",
+            "boardState" => [
+                ["X", "O"],
+                ["X", "O", "O"],
+                ["O", "X", "X"]
+            ],
+        ]);
+
+        $client = static::createClient();
+        $client->request('POST', '/api/move', [], [], [], $invalidRequestContent);
+        $this->assertSame(400, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->headers->contains('Content-Type', 'application/json'));
+
+        $decodedContent = json_decode($client->getResponse()->getContent());
+        $errMsg = $decodedContent->message;
+        $this->assertSame('Invalid or malformed request.', $errMsg);
     }
 }

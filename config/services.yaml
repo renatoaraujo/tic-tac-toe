@@ -20,3 +20,9 @@ services:
     TicTacToe\Factory\:
         resource: '../src/Factory'
         public: true
+
+    TicTacToe\EventListener\ExceptionSubscriber:
+        class: TicTacToe\EventListener\ExceptionSubscriber
+        arguments: []
+        tags:
+            - { name: kernel.event_subscriber }

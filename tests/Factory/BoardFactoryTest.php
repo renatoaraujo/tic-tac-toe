@@ -2,6 +2,7 @@
 
 namespace TicTacToe\Tests\Factory;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use TicTacToe\Factory\BoardFactory;
 use TicTacToe\Factory\MoveFactory;
@@ -20,24 +21,36 @@ class BoardFactoryTest extends TestCase
     private $factory;
 
     /**
-     * @const array boardstate sample
+     * @var ArrayCollection
      */
-    private const BOARD_STATE = [
-        ["X", "O", ""],
-        ["X", "O", "O"],
-        ["O", "X", "X"]
-    ];
+    private static $staticMoves;
+
+    /**
+     * Create static moves for testing
+     */
+    public static function setUpBeforeClass()
+    {
+        $boardState = [
+            ["X", "O", ""],
+            ["X", "O", "O"],
+            ["O", "X", "X"]
+        ];
+
+        $moveFactory = new MoveFactory();
+        self::$staticMoves = $moveFactory->createMovesFromBoardState($boardState);
+    }
 
     public function setUp(): void
     {
         $this->factory = new BoardFactory();
     }
 
+    /**
+     * Test board with moves
+     */
     public function testCreateBoardWithMoves(): void
     {
-        $moveFactory = new MoveFactory();
-        $moves = $moveFactory->createMovesFromBoardState(self::BOARD_STATE);
-        $board = $this->factory->createBoardWithMoves($moves);
+        $board = $this->factory->createBoardWithMoves(self::$staticMoves);
         $this->assertAttributeCount(9, 'moves', $board);
     }
 }

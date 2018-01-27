@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1517085071">
-  <project timestamp="1517085071">
+<coverage generated="1517085646">
+  <project timestamp="1517085646">
     <package name="TicTacToe\Controller">
       <file name="/Users/renato/Projetos/VazarDoPais/Tests/TicTacToe/src/Controller/ApiController.php">
         <class name="TicTacToe\Controller\ApiController" namespace="TicTacToe\Controller" fullPackage="TicTacToe" package="TicTacToe">
@@ -77,19 +77,19 @@
         </class>
         <line num="31" type="method" name="getCoordY" visibility="public" complexity="1" crap="1" count="1"/>
         <line num="33" type="stmt" count="1"/>
-        <line num="39" type="method" name="setCoordY" visibility="public" complexity="1" crap="1" count="3"/>
-        <line num="41" type="stmt" count="3"/>
-        <line num="42" type="stmt" count="3"/>
+        <line num="39" type="method" name="setCoordY" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="41" type="stmt" count="2"/>
+        <line num="42" type="stmt" count="2"/>
         <line num="47" type="method" name="getCoordX" visibility="public" complexity="1" crap="1" count="1"/>
         <line num="49" type="stmt" count="1"/>
-        <line num="55" type="method" name="setCoordX" visibility="public" complexity="1" crap="1" count="3"/>
-        <line num="57" type="stmt" count="3"/>
-        <line num="58" type="stmt" count="3"/>
+        <line num="55" type="method" name="setCoordX" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="57" type="stmt" count="2"/>
+        <line num="58" type="stmt" count="2"/>
         <line num="63" type="method" name="getUnit" visibility="public" complexity="1" crap="1" count="1"/>
         <line num="65" type="stmt" count="1"/>
-        <line num="71" type="method" name="setUnit" visibility="public" complexity="1" crap="1" count="3"/>
-        <line num="73" type="stmt" count="3"/>
-        <line num="74" type="stmt" count="3"/>
+        <line num="71" type="method" name="setUnit" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="73" type="stmt" count="2"/>
+        <line num="74" type="stmt" count="2"/>
         <metrics loc="75" ncloc="42" classes="1" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="9" elements="15" coveredelements="15"/>
       </file>
     </package>
@@ -137,19 +137,19 @@
         <class name="TicTacToe\Factory\MoveFactory" namespace="TicTacToe\Factory">
           <metrics complexity="4" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="9" elements="12" coveredelements="12"/>
         </class>
-        <line num="15" type="method" name="createMovesFromBoardState" visibility="public" complexity="2" crap="2" count="3"/>
-        <line num="17" type="stmt" count="3"/>
-        <line num="18" type="stmt" count="3"/>
-        <line num="19" type="method" name="anonymousFunction:19#85" complexity="1" crap="1" count="3"/>
-        <line num="20" type="stmt" count="3"/>
-        <line num="21" type="stmt" count="3"/>
-        <line num="24" type="stmt" count="3"/>
-        <line num="27" type="method" name="createMove" visibility="protected" complexity="1" crap="1" count="3"/>
-        <line num="29" type="stmt" count="3"/>
-        <line num="30" type="stmt" count="3"/>
-        <line num="31" type="stmt" count="3"/>
-        <line num="32" type="stmt" count="3"/>
-        <line num="33" type="stmt" count="3"/>
+        <line num="15" type="method" name="createMovesFromBoardState" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="17" type="stmt" count="2"/>
+        <line num="18" type="stmt" count="2"/>
+        <line num="19" type="method" name="anonymousFunction:19#85" complexity="1" crap="1" count="2"/>
+        <line num="20" type="stmt" count="2"/>
+        <line num="21" type="stmt" count="2"/>
+        <line num="24" type="stmt" count="2"/>
+        <line num="27" type="method" name="createMove" visibility="protected" complexity="1" crap="1" count="2"/>
+        <line num="29" type="stmt" count="2"/>
+        <line num="30" type="stmt" count="2"/>
+        <line num="31" type="stmt" count="2"/>
+        <line num="32" type="stmt" count="2"/>
+        <line num="33" type="stmt" count="2"/>
         <metrics loc="35" ncloc="30" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="10" elements="13" coveredelements="13"/>
       </file>
     </package>

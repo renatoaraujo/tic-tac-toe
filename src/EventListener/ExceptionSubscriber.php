@@ -26,10 +26,15 @@ class ExceptionSubscriber implements EventSubscriberInterface
             'message' => $exception->getMessage(),
         ];
 
-        $response = new JsonResponse($exceptionData, $exception->getCode());
+        $statusCode = ($exception->getCode() == 0) ? 500 : $exception->getCode();
+
+        $response = new JsonResponse($exceptionData, $statusCode);
         $event->setResponse($response);
     }
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return [

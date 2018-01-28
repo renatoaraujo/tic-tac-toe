@@ -6,13 +6,12 @@ exclude_patterns:
  - "/var/**"
  - "/vendor/**"
  - ".*"
- - "*.yml"
- - "*.md"
- - "*.lock"
- - "*.json"
- - "*.dist"
- - "*.xml"
- - "/tests/**"
+ - "**.yml"
+ - "**.md"
+ - "**.lock"
+ - "**.json"
+ - "**.dist"
+ - "**.xml"
 plugins:
   phpcodesniffer:
     enabled: true
@@ -26,12 +25,6 @@ plugins:
     config:
       file_extensions: "php"
       rulesets: "unusedcode,codesize,naming,design,controversial"
-  sonar-php:
-    enabled: true
-    config:
-      tests_patterns:
-        - src/test/**
-        - app/src/test/**
   duplication:
     enabled: true
     config:

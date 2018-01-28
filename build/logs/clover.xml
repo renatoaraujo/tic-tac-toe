@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1517180848">
-  <project timestamp="1517180848">
+<coverage generated="1517181994">
+  <project timestamp="1517181994">
     <package name="TicTacToe\Controller">
       <file name="/Users/renato/Projetos/VazarDoPais/Tests/TicTacToe/src/Controller/ApiController.php">
         <class name="TicTacToe\Controller\ApiController" namespace="TicTacToe\Controller" fullPackage="TicTacToe" package="TicTacToe">
@@ -375,15 +375,7 @@
         <line num="78" type="stmt" count="1"/>
         <metrics loc="80" ncloc="54" classes="1" methods="4" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="14" elements="21" coveredelements="16"/>
       </file>
-      <file name="/Users/renato/Projetos/VazarDoPais/Tests/TicTacToe/src/Util/Validator/MoveValidator.php">
-        <class name="TicTacToe\Util\Validator\MoveValidator" namespace="TicTacToe\Util\Validator" fullPackage="TicTacToe" package="TicTacToe">
-          <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
-        </class>
-        <line num="16" type="method" name="isValidMove" visibility="public" complexity="1" crap="2" count="0"/>
-        <line num="18" type="stmt" count="0"/>
-        <metrics loc="20" ncloc="11" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
-      </file>
     </package>
-    <metrics files="15" loc="1105" ncloc="715" classes="14" methods="59" coveredmethods="51" conditionals="0" coveredconditionals="0" statements="219" coveredstatements="199" elements="278" coveredelements="250"/>
+    <metrics files="14" loc="1085" ncloc="704" classes="13" methods="58" coveredmethods="51" conditionals="0" coveredconditionals="0" statements="218" coveredstatements="199" elements="276" coveredelements="250"/>
   </project>
 </coverage>

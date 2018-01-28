@@ -33,7 +33,7 @@ class ApiControllerTest extends WebTestCase
 
     public function testInvalidMakeMove(): void
     {
-        $invalidRequestContent = json_encode([
+        $invalidContent = json_encode([
             "playerUnit" => "X",
             "boardState" => [
                 ["X", "O"],
@@ -43,7 +43,7 @@ class ApiControllerTest extends WebTestCase
         ]);
 
         $client = static::createClient();
-        $client->request('POST', '/api/move', [], [], [], $invalidRequestContent);
+        $client->request('POST', '/api/move', [], [], [], $invalidContent);
         $this->assertSame(400, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->headers->contains('Content-Type', 'application/json'));
 

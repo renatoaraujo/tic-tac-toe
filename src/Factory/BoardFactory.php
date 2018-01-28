@@ -37,9 +37,9 @@ class BoardFactory
     /**
      * @param Board $board
      *
-     * @return ArrayCollection|null
+     * @return ArrayCollection
      */
-    public function getAllEmptyMovesFromBoard(Board $board): ?ArrayCollection
+    public function getAllEmptyMovesFromBoard(Board $board): ArrayCollection
     {
         /**
          * @var ArrayCollection
@@ -48,6 +48,28 @@ class BoardFactory
 
         foreach ($moves as $move) {
             if (!empty($move->getUnit())) {
+                $moves->removeElement($move);
+            }
+        }
+
+        return $moves;
+    }
+
+    /**
+     * @param Board $board
+     * @param string $unit
+     *
+     * @return ArrayCollection
+     */
+    public function getBoardMovesGroupedByUnit(Board $board, string $unit): ?ArrayCollection
+    {
+        /**
+         * @var ArrayCollection
+         */
+        $moves = clone $board->getMoves();
+
+        foreach ($moves as $move) {
+            if ($move->getUnit() != $unit) {
                 $moves->removeElement($move);
             }
         }

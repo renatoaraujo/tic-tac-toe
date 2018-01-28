@@ -26,6 +26,28 @@ class Move
     private $unit;
 
     /**
+     * Move constructor.
+     *
+     * @param int|null $coordY
+     * @param int|null $coordX
+     * @param null|string $unit
+     */
+    public function __construct(?int $coordY = null, ?int $coordX = null, ?string $unit = null)
+    {
+        if (!is_null($coordY)) {
+            $this->coordY = $coordY;
+        }
+
+        if (!is_null($coordX)) {
+            $this->coordX = $coordX;
+        }
+
+        if (!is_null($unit)) {
+            $this->unit = $unit;
+        }
+    }
+
+    /**
      * @return int
      */
     public function getCoordY(): int
@@ -35,10 +57,13 @@ class Move
 
     /**
      * @param int $coordY
+     *
+     * @return Move
      */
-    public function setCoordY(int $coordY): void
+    public function setCoordY(int $coordY): Move
     {
         $this->coordY = $coordY;
+        return $this;
     }
 
     /**
@@ -51,10 +76,13 @@ class Move
 
     /**
      * @param int $coordX
+     *
+     * @return Move
      */
-    public function setCoordX(int $coordX): void
+    public function setCoordX(int $coordX): Move
     {
         $this->coordX = $coordX;
+        return $this;
     }
 
     /**
@@ -67,9 +95,12 @@ class Move
 
     /**
      * @param string $unit
+     *
+     * @return Move
      */
-    public function setUnit(string $unit): void
+    public function setUnit(string $unit): Move
     {
         $this->unit = $unit;
+        return $this;
     }
 }

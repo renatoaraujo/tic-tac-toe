@@ -18,13 +18,15 @@ class GameFactory
      * @param string $playerUnit
      * @param null|Board $board
      * @param null|string $unitWinner
+     * @param array|null $nextMove
      *
      * @return Game
      */
     public function createGame(
         string $playerUnit,
         ?Board $board = null,
-        ?string $unitWinner = null
+        ?string $unitWinner = null,
+        ?array $nextMove = []
     ): Game {
         $game = new Game();
         $game->setPlayerUnit($playerUnit);
@@ -41,6 +43,8 @@ class GameFactory
         if (!is_null($board)) {
             $game->setBoardState($board);
         }
+
+        $game->setNextMove($nextMove);
 
         return $game;
     }

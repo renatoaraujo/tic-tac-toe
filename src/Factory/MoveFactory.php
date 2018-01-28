@@ -37,12 +37,49 @@ class MoveFactory
      *
      * @return Move
      */
-    public function createMove(string $unit, int $coordX, int $coordY): Move
+    public function createMove(?string $unit, int $coordX, int $coordY): Move
     {
         $move = new Move();
         $move->setCoordX($coordX);
         $move->setCoordY($coordY);
         $move->setUnit($unit);
+
         return $move;
+    }
+
+    /**
+     * @param null|string $unit
+     *
+     * @return array
+     */
+    public function getWinnerMovesCombinations(?string $unit = null): array
+    {
+        $winnerCombinations = [];
+        for ($row = 0; $row < 3; $row++) {
+            $winnerCombinations[] = [
+                new Move($row, 0, $unit),
+                new Move($row, 1, $unit),
+                new Move($row, 2, $unit),
+            ];
+            $winnerCombinations[] = [
+                new Move(0, $row, $unit),
+                new Move(1, $row, $unit),
+                new Move(2, $row, $unit),
+            ];
+        }
+
+        $winnerCombinations[] = [
+            new Move(2, 0, $unit),
+            new Move(1, 1, $unit),
+            new Move(0, 2, $unit),
+        ];
+
+        $winnerCombinations[] = [
+            new Move(0, 0, $unit),
+            new Move(1, 1, $unit),
+            new Move(2, 2, $unit),
+        ];
+
+        return $winnerCombinations;
     }
 }

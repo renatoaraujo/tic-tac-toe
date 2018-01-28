@@ -26,3 +26,14 @@ plugins:
     config:
       file_extensions: "php"
       rulesets: "unusedcode,codesize,naming,design,controversial"
+  sonar-php:
+    enabled: true
+    config:
+      tests_patterns:
+        - src/test/**
+        - app/src/test/**
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - php:

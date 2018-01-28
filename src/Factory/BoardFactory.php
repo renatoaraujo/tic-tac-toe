@@ -39,7 +39,7 @@ class BoardFactory
      *
      * @return ArrayCollection|null
      */
-    protected function getAllEmptyMovesFromBoard(Board $board): ?ArrayCollection
+    public function getAllEmptyMovesFromBoard(Board $board): ?ArrayCollection
     {
         /**
          * @var ArrayCollection

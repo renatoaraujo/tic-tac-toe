@@ -41,7 +41,7 @@ class Game
     private $boardState;
 
     /**
-     * @var Move
+     * @var array
      */
     private $nextMove;
 
@@ -154,18 +154,21 @@ class Game
     }
 
     /**
-     * @return Move
+     * @return array
      */
-    public function getNextMove(): ?Move
+    public function getNextMove(): array
     {
         return $this->nextMove;
     }
 
     /**
-     * @param Move $nextMove
+     * @param array $nextMove
+     *
+     * @return Game
      */
-    public function setNextMove(Move $nextMove): void
+    public function setNextMove(array $nextMove): Game
     {
         $this->nextMove = $nextMove;
+        return $this;
     }
 }

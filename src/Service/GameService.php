@@ -2,8 +2,12 @@
 
 namespace TicTacToe\Service;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use TicTacToe\Entity\Board;
 use TicTacToe\Entity\Game;
+use TicTacToe\Entity\Move;
+use TicTacToe\Util\GameUnit;
 
 /**
  * Class MoveService
@@ -17,6 +21,11 @@ class GameService implements MoveInterface
      * @var ContainerInterface
      */
     private $container;
+
+    /**
+     * @var Board
+     */
+    private $board;
 
     /**
      * GameService constructor.
@@ -33,7 +42,17 @@ class GameService implements MoveInterface
      */
     public function makeMove(array $boardState, string $playerUnit = 'X'): array
     {
-        return [];
+        $moves = $this->container->get('TicTacToe\Factory\MoveFactory')->createMovesFromBoardState($boardState);
+
+        $boardFactory = $this->container->get('TicTacToe\Factory\BoardFactory');
+        $this->board = $boardFactory->createBoard($moves);
+
+        $availableMoves = $boardFactory->getAllEmptyMovesFromBoard($this->board);
+
+        $move = ($availableMoves->count() > 1) ? $this->predictNextMove($availableMoves) : $availableMoves->first();
+        $move->setUnit(GameUnit::getInverseUnit($playerUnit));
+
+        return array_values((array) $move);
     }
 
     /**
@@ -44,12 +63,20 @@ class GameService implements MoveInterface
     public function createGame(string $content): Game
     {
         $requestGame = json_decode($content);
-        $moves = $this->container->get('TicTacToe\Factory\MoveFactory')
-            ->createMovesFromBoardState($requestGame->boardState);
-        $board = $this->container->get('TicTacToe\Factory\BoardFactory')
-            ->createBoard($moves);
-        $game = $this->container->get('TicTacToe\Factory\GameFactory')
-            ->createGame($requestGame->playerUnit, $board);
-        return $game;
+        $nextMove = $this->makeMove($requestGame->boardState, $requestGame->playerUnit);
+
+        return $this->container->get('TicTacToe\Factory\GameFactory')
+            ->createGame($requestGame->playerUnit, $this->board)
+            ->setNextMove($nextMove);
+    }
+
+    /**
+     * @param ArrayCollection $moves
+     *
+     * @return Move
+     */
+    protected function predictNextMove(ArrayCollection $moves): Move
+    {
+        return $moves->first();
     }
 }

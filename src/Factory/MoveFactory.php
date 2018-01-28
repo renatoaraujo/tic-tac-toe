@@ -55,6 +55,18 @@ class MoveFactory
     public function getWinnerMovesCombinations(?string $unit = null): array
     {
         $winnerCombinations = [];
+        $winnerCombinations[] = [
+            new Move(2, 0, $unit),
+            new Move(1, 1, $unit),
+            new Move(0, 2, $unit),
+        ];
+
+        $winnerCombinations[] = [
+            new Move(0, 0, $unit),
+            new Move(1, 1, $unit),
+            new Move(2, 2, $unit),
+        ];
+
         for ($row = 0; $row < 3; $row++) {
             $winnerCombinations[] = [
                 new Move($row, 0, $unit),
@@ -67,18 +79,6 @@ class MoveFactory
                 new Move(2, $row, $unit),
             ];
         }
-
-        $winnerCombinations[] = [
-            new Move(2, 0, $unit),
-            new Move(1, 1, $unit),
-            new Move(0, 2, $unit),
-        ];
-
-        $winnerCombinations[] = [
-            new Move(0, 0, $unit),
-            new Move(1, 1, $unit),
-            new Move(2, 2, $unit),
-        ];
 
         return $winnerCombinations;
     }

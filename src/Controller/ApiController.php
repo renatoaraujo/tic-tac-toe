@@ -33,9 +33,7 @@ class ApiController extends Controller
         if (!ApiRequestValidator::isValid($request->getContent())) {
             throw new InvalidRequestException();
         }
-
         $game = $this->get('TicTacToe\Service\GameService')->createGame($request->getContent());
-
         return $this->json($game);
     }
 }

@@ -3,11 +3,12 @@
 namespace TicTacToe\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use TicTacToe\Entity\Board;
 use TicTacToe\Entity\Game;
 use TicTacToe\Entity\Move;
 use TicTacToe\Factory\BoardFactory;
+use TicTacToe\Factory\GameFactory;
+use TicTacToe\Factory\MoveFactory;
 use TicTacToe\Util\GameUnit;
 
 /**
@@ -18,11 +19,6 @@ use TicTacToe\Util\GameUnit;
  */
 class GameService implements MoveInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
     /**
      * @var Board
      */
@@ -39,15 +35,30 @@ class GameService implements MoveInterface
     private $boardFactory;
 
     /**
+     * @var MoveFactory
+     */
+    private $moveFactory;
+
+    /**
+     * @var GameFactory
+     */
+    private $gameFactory;
+
+    /**
      * GameService constructor.
      *
-     * @param ContainerInterface $container
      * @param BoardFactory $boardFactory
+     * @param MoveFactory $moveFactory
+     * @param GameFactory $gameFactory
      */
-    public function __construct(ContainerInterface $container, BoardFactory $boardFactory)
-    {
-        $this->container = $container;
+    public function __construct(
+        BoardFactory $boardFactory,
+        MoveFactory $moveFactory,
+        GameFactory $gameFactory
+    ) {
         $this->boardFactory = $boardFactory;
+        $this->moveFactory = $moveFactory;
+        $this->gameFactory = $gameFactory;
     }
 
     /**
@@ -55,8 +66,7 @@ class GameService implements MoveInterface
      */
     public function makeMove(array $boardState, string $playerUnit = 'X'): array
     {
-        $moves = $this->container->get('TicTacToe\Factory\MoveFactory')
-            ->createMovesFromBoardState($boardState);
+        $moves = $this->moveFactory->createMovesFromBoardState($boardState);
         $this->board = $this->boardFactory->createBoard($moves);
 
         $movesByPlayer = $this->boardFactory->getBoardMovesGroupedByUnit($this->board, $playerUnit);
@@ -72,7 +82,8 @@ class GameService implements MoveInterface
             return [];
         }
 
-        $move = ($availableMoves->count() > 1) ? $this->predictNextMove($availableMoves) : $availableMoves->first();
+        $mostProbableMove = $this->predictNextMove($movesByPlayer, $playerUnit);
+        $move = (is_null($mostProbableMove)) ? $availableMoves->first() : $mostProbableMove;
         $move->setUnit(GameUnit::getInverseUnit($playerUnit));
 
         $movesByBot = $this->boardFactory->getBoardMovesGroupedByUnit($this->board, GameUnit::getInverseUnit($playerUnit));
@@ -91,31 +102,73 @@ class GameService implements MoveInterface
     {
         $requestGame = json_decode($content);
         $nextMove = $this->makeMove($requestGame->boardState, $requestGame->playerUnit);
-
-        return $this->container->get('TicTacToe\Factory\GameFactory')
-            ->createGame($requestGame->playerUnit, $this->board, $this->unitWinner, $nextMove);
+        return $this->gameFactory->createGame($requestGame->playerUnit, $this->board, $this->unitWinner, $nextMove);
     }
 
     /**
      * @param ArrayCollection $moves
+     * @param string $playerUnit
      *
      * @return Move
      */
-    protected function predictNextMove(ArrayCollection $moves): Move
+    protected function predictNextMove(ArrayCollection $moves, string $playerUnit): ?Move
     {
-        return $moves->first();
+        $winnerCombinations = $this->getFilteredWinnerCombinations($moves, $playerUnit);
+        $availableMoves = clone $this->boardFactory->getAllEmptyMovesFromBoard($this->board);
+
+        $mostProbableMove = null;
+
+        foreach ($availableMoves->toArray() as &$availableMove) {
+            $availableMove->setUnit($playerUnit);
+        }
+
+        foreach ($winnerCombinations as $winnerCombinationKey => &$winnerCombination) {
+
+            array_walk($winnerCombination, function(&$combination, $key) use (
+                &$winnerCombination,
+                &$winnerCombinationKey,
+                &$winnerCombinations,
+                $availableMoves,
+                &$mostProbableMove,
+                $moves
+            ) {
+                if (!in_array($combination, $moves->toArray()) && !in_array($combination, $availableMoves->toArray())) {
+                    unset($winnerCombinations[$winnerCombinationKey]);
+                    return;
+                }
+
+                if (!in_array($combination, $availableMoves->toArray())) {
+                    unset($winnerCombination[$key]);
+                }
+
+                if (count($winnerCombination) === 1) {
+                    $mostProbableMove = $combination;
+                }
+            });
+
+
+            if (empty($winnerCombination)) {
+                unset($winnerCombinations[$winnerCombinationKey]);
+            }
+        }
+
+        if (is_null($mostProbableMove) && !empty($winnerCombinations)) {
+            $mostProbableMove = current(min($winnerCombinations));
+        }
+
+        return $mostProbableMove;
     }
 
     /**
      * @param string $playerUnit
      * @param ArrayCollection $moves
+     * @todo refactoring using getFilteredWinnerCombinations
      *
      * @return bool
      */
     protected function checkWinner(string $playerUnit, ArrayCollection $moves): bool
     {
-        $winnerCombinations = $this->container->get('TicTacToe\Factory\MoveFactory')
-            ->getWinnerMovesCombinations($playerUnit);
+        $winnerCombinations = $this->moveFactory->getWinnerMovesCombinations($playerUnit);
         $isWinner = false;
 
         array_walk($winnerCombinations, function (&$value) use (
@@ -145,5 +198,27 @@ class GameService implements MoveInterface
     protected function setUnitWinner(string $unit): void
     {
         $this->unitWinner = $unit;
+    }
+
+    /**
+     * @param ArrayCollection $moves
+     * @param string $playerUnit
+     *
+     * @return array
+     */
+    protected function getFilteredWinnerCombinations(ArrayCollection $moves, string $playerUnit): array
+    {
+        $winnerCombinations = $this->moveFactory->getWinnerMovesCombinations($playerUnit);
+
+        array_walk($winnerCombinations, function (&$value, $indexCombination) use (&$winnerCombinations, $moves) {
+            foreach ($value as $key => &$combination) {
+                if (in_array($combination, $moves->toArray())) {
+                    unset($value[$key]);
+                }
+            }
+            $winnerCombinations[$indexCombination] = $value;
+        });
+
+        return $winnerCombinations;
     }
 }

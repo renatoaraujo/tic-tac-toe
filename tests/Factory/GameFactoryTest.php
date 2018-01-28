@@ -10,6 +10,12 @@ use TicTacToe\Factory\GameFactory;
 use TicTacToe\Factory\MoveFactory;
 use TicTacToe\Util\GameUnit;
 
+/**
+ * Class GameFactoryTest
+ * @package TicTacToe\Tests\Factory
+ *
+ * @author Renato Rodrigues de Araujo <renato.r.araujo@gmail.com>
+ */
 class GameFactoryTest extends TestCase
 {
     /**

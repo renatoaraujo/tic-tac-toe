@@ -5,6 +5,12 @@ namespace TicTacToe\Tests\Factory;
 use PHPUnit\Framework\TestCase;
 use TicTacToe\Factory\MoveFactory;
 
+/**
+ * Class MoveFactoryTest
+ * @package TicTacToe\Tests\Factory
+ *
+ * @author Renato Rodrigues de Araujo <renato.r.araujo@gmail.com>
+ */
 class MoveFactoryTest extends TestCase
 {
     /**

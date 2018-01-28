@@ -115,16 +115,17 @@ class GameService implements MoveInterface
     {
         $winnerCombinations = $this->getFilteredWinnerCombinations($moves, $playerUnit);
         $availableMoves = clone $this->boardFactory->getAllEmptyMovesFromBoard($this->board);
+        $availableMoves->forAll(function (int $key, Move $availableMove) use ($playerUnit) {
+            return $availableMove->setUnit($playerUnit);
+        });
 
         $mostProbableMove = null;
 
-        foreach ($availableMoves->toArray() as &$availableMove) {
-            $availableMove->setUnit($playerUnit);
-        }
-
         foreach ($winnerCombinations as $winnerCombinationKey => &$winnerCombination) {
-
-            array_walk($winnerCombination, function(&$combination, $key) use (
+            array_walk($winnerCombination, function (
+                &$combination,
+                $key
+            ) use (
                 &$winnerCombination,
                 &$winnerCombinationKey,
                 &$winnerCombinations,
@@ -146,7 +147,6 @@ class GameService implements MoveInterface
                 }
             });
 
-
             if (empty($winnerCombination)) {
                 unset($winnerCombinations[$winnerCombinationKey]);
             }
@@ -162,33 +162,19 @@ class GameService implements MoveInterface
     /**
      * @param string $playerUnit
      * @param ArrayCollection $moves
-     * @todo refactoring using getFilteredWinnerCombinations
      *
      * @return bool
      */
     protected function checkWinner(string $playerUnit, ArrayCollection $moves): bool
     {
-        $winnerCombinations = $this->moveFactory->getWinnerMovesCombinations($playerUnit);
+        $filteredCombinations = $this->getFilteredWinnerCombinations($moves, $playerUnit);
         $isWinner = false;
-
-        array_walk($winnerCombinations, function (&$value) use (
-            $moves,
-            &$isWinner,
-            $playerUnit
-        ) {
-
-            foreach ($value as $key => $combination) {
-                if (in_array($combination, $moves->toArray())) {
-                    unset($value[$key]);
-                }
-            }
-
-            if (empty($value)) {
+        foreach ($filteredCombinations as $combination) {
+            if (empty($combination)) {
+                $this->unitWinner = $playerUnit;
                 $isWinner = true;
-                $this->setUnitWinner($playerUnit);
             }
-        });
-
+        }
         return $isWinner;
     }
 

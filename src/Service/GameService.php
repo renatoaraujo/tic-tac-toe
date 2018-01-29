@@ -7,7 +7,6 @@ use TicTacToe\Entity\Board;
 use TicTacToe\Entity\Game;
 use TicTacToe\Entity\Move;
 use TicTacToe\Exception\EmptyAvailableMovesException;
-use TicTacToe\Exception\EndedGameException;
 use TicTacToe\Factory\BoardFactory;
 use TicTacToe\Factory\GameFactory;
 use TicTacToe\Factory\MoveFactory;
@@ -141,8 +140,8 @@ class GameService implements MoveInterface
         $availableMoves->forAll(function (int $key, Move $availableMove) use ($unit) {
             return $availableMove->setUnit($unit);
         });
-
-        $mostProbableMove = $availableMoves->first();
+        $middleMove = $this->getMiddleMove($availableMoves);
+        $mostProbableMove = ($middleMove->isEmpty()) ? $availableMoves->first() : $middleMove->first();
 
         foreach ($winnerCombinations as &$winnerCombination) {
             array_walk($winnerCombination, function (
@@ -177,6 +176,20 @@ class GameService implements MoveInterface
         }
 
         return $mostProbableMove;
+    }
+
+    /**
+     * @param ArrayCollection $availableMoves
+     *
+     * @return ArrayCollection
+     */
+    protected function getMiddleMove(ArrayCollection $availableMoves): ArrayCollection
+    {
+        return $availableMoves->filter(function(Move $move) {
+            if ($move->getCoordY() === 1 && $move->getCoordX() === 1) {
+                return $move;
+            }
+        });
     }
 
     /**

@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  tictactoe:
+    container_name: renatoaraujo.tictactoe
+    build: .
+    volumes:
+      - .:/var/www/html
+    expose:
+      - "9000"
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - tictactoe

@@ -6,12 +6,12 @@ exclude_patterns:
  - "/var/**"
  - "/vendor/**"
  - ".*"
- - "**.yml"
- - "**.md"
- - "**.lock"
- - "**.json"
- - "**.dist"
- - "**.xml"
+ - "**/**.yml"
+ - "**/**.md"
+ - "**/**.lock"
+ - "**/**.json"
+ - "**/**.dist"
+ - "**/**.xml"
 plugins:
   phpcodesniffer:
     enabled: true

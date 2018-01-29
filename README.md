@@ -59,3 +59,102 @@ If you are using docker for application and not running PHP on your local machin
 ```bash
 $ docker exec -it renatoaraujo.tictactoe bin/phpunit
 ```
+
+# Usage
+
+```
+POST http://localhost:8000/api/move
+{
+  "playerUnit" : "X",
+  "boardState" : 
+  	[
+      ["X", "O", ""],
+      ["X", "O", "O"],
+      ["",  "",  ""]
+    ]  
+  
+}
+
+Response 200 OK
+{
+    "botUnit": "O",
+    "playerUnit": "X",
+    "tied": false,
+    "botWinner": false,
+    "playerWinner": false,
+    "boardState": {
+        "moves": [
+            {
+                "coordY": 0,
+                "coordX": 0,
+                "unit": "X"
+            },
+            {
+                "coordY": 1,
+                "coordX": 0,
+                "unit": "O"
+            },
+            {
+                "coordY": 2,
+                "coordX": 0,
+                "unit": "X"
+            },
+            {
+                "coordY": 0,
+                "coordX": 1,
+                "unit": "X"
+            },
+            {
+                "coordY": 1,
+                "coordX": 1,
+                "unit": "O"
+            },
+            {
+                "coordY": 2,
+                "coordX": 1,
+                "unit": "O"
+            },
+            {
+                "coordY": 0,
+                "coordX": 2,
+                "unit": "X"
+            },
+            {
+                "coordY": 1,
+                "coordX": 2,
+                "unit": "X"
+            },
+            {
+                "coordY": 2,
+                "coordX": 2,
+                "unit": "X"
+            }
+        ],
+        "completed": false
+    },
+    "nextMove": [
+        0,
+        2,
+        "O"
+    ]
+}
+```
+
+Using curl:
+
+```bash
+curl -X POST \
+  http://localhost:8000/api/move \
+  -H 'Cache-Control: no-cache' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "playerUnit" : "X",
+  "boardState" : 
+  	[
+      ["X", "O", ""],
+      ["X", "O", "O"],
+      ["",  "",  ""]
+    ]  
+  
+}'
+```

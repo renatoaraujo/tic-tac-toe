@@ -1,5 +1,151 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        body {
+            padding-top: 60px
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .table {
+            width: 75%;
+            margin: 0 auto;
+        }
+
+        .table tr td {
+            height: 150px;
+            width: auto;
+        }
+
+        .middle-table-td {
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .first-row td {
+            border-top: 0 none;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-    <h1>Hello world!</h1>
+    <div class="container">
+
+        <h1 class="title">TicTacToe</h1>
+
+        <div class="alert" role="alert" id="winner">
+            <h4 class="alert-heading"></h4>
+        </div>
+
+        </div>
+
+        <table class="table" data-finished="false">
+            <tr class="first-row">
+                <td class="align-middle text-center" data-x=0 data-y=0 data-unit="">
+                    <i class="fa fa-5x"></i>
+                </td>
+                <td class="align-middle text-center middle-table-td" data-x=1 data-y=0 data-unit="">
+                    <i class="fa fa-5x"></i>
+                </td>
+                <td class="align-middle text-center" data-x=2 data-y=0 data-unit="">
+                    <i class="fa fa-5x"></i>
+                </td>
+            </tr>
+            <tr>
+                <td class="align-middle text-center" data-x=0 data-y=1 data-unit="">
+                    <i class="fa fa-5x"></i>
+                </td>
+                <td class="align-middle text-center middle-table-td" data-x=1 data-y=1 data-unit="">
+                    <i class="fa fa-5x"></i>
+                </td>
+                <td class="align-middle text-center" data-x=2 data-y=1 data-unit="">
+                    <i class="fa fa-5x"></i>
+                </td>
+            </tr>
+            <tr>
+                <td class="align-middle text-center" data-x=0 data-y=2 data-unit="">
+                    <i class="fa fa-5x"></i>
+                </td>
+                <td class="align-middle text-center middle-table-td" data-x=1 data-y=2 data-unit="">
+                    <i class="fa fa-5x"></i>
+                </td>
+                <td class="align-middle text-center" data-x=2 data-y=2 data-unit="">
+                    <i class="fa fa-5x"></i>
+                </td>
+            </tr>
+        </table>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        var service = {
+            callAPI: function (boardState) {
+                var playerUnit = "X";
+                $.ajax({
+                    url: "api/move",
+                    method: "POST",
+                    data: JSON.stringify({
+                        playerUnit: playerUnit,
+                        boardState: boardState
+                    }),
+                    processData: false,
+                    contentType: 'application/json'
+                }).done(function (data) {
+
+                    if (data.playerWinner) {
+                        $("#winner").addClass("alert-success");
+                        $("#winner h4").html("Well done! You are the winner!");
+                        $("table").data("finished", true);
+                    } else if (data.botWinner) {
+                        $("#winner").addClass("alert-danger");
+                        $("#winner h4").html("Hmmmmm! Try one more time!");
+                        $("table").data("finished", true);
+                    } else if (!data.botWinner && !data.playerWinner && data.boardState.completed) {
+                        $("#winner").addClass("alert-info");
+                        $("#winner h4").html("Well, there is a tie!");
+                        $("table").data("finished", true);
+                    }
+
+                    var tableElement = $("td").filter('[data-x=' + data.nextMove[0] + ']').filter('[data-y=' + data.nextMove[1] + ']');
+                    tableElement.data("unit", data.nextMove[2]);
+                    tableElement.html("<i class='fa fa-circle-o fa-5x'></i>");
+                });
+            }
+        };
+
+        $("td").click(function () {
+            if ($(this).data("unit") !== "") {
+                return false;
+            }
+
+            if ($("table").data("finished")) {
+                return false;
+            }
+
+            $(this).html("<i class='fa fa-times fa-5x'></i>");
+            $(this).data("unit", "X");
+
+            var boardState = [];
+
+            $("tr").each(function () {
+                var row = [];
+                $(this).find("td").each(function () {
+                    row.push($(this).data("unit"));
+                });
+                boardState.push(row);
+            });
+
+            service.callAPI(boardState);
+        });
+    </script>
 {% endblock %}

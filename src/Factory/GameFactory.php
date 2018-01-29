@@ -25,19 +25,21 @@ class GameFactory
     public function createGame(
         string $playerUnit,
         ?Board $board = null,
-        array $winner = [],
+        array $winner,
         ?array $nextMove = []
     ): Game {
         $game = new Game();
         $game->setPlayerUnit($playerUnit);
-        $game->setBotUnit(GameUnit::getInverseUnit($playerUnit));
 
-        if (!empty($winner)) {
+        $winnerUnit = isset($winner['unit']) ? $winner['unit'] : null;
+        $winnerMoves = isset($winner['moves']) ? $winner['moves'] : null;
+
+        if (!is_null($winnerUnit)) {
             ($winner['unit'] === $playerUnit) ? $game->setPlayerWinner() : $game->setBotWinner();
-            $game->setWinnerMoves($winner['moves']);
+            $game->setWinnerMoves($winnerMoves);
         }
 
-        if ($board->isCompleted() && empty($winner)) {
+        if ($board->isCompleted() && is_null($winnerUnit)) {
             $game->setTied();
         }
 

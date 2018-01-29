@@ -1,0 +1,37 @@
+body {
+    padding-top: 60px
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.table {
+    width: 75%;
+    margin: 0 auto;
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.table tr td {
+    height: 150px;
+    width: auto;
+}
+
+.middle-table-td {
+    border-left: 1px solid #dee2e6;
+    border-right: 1px solid #dee2e6;
+}
+
+.first-row td {
+    border-top: 0 none;
+}
+
+.reset {
+    margin-top: 30px;
+}
+
+.alert {
+    text-align: center;
+}

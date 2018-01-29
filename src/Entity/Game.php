@@ -13,11 +13,6 @@ class Game
     /**
      * @var string
      */
-    private $botUnit;
-
-    /**
-     * @var string
-     */
     private $playerUnit;
 
     /**
@@ -48,27 +43,7 @@ class Game
     /**
      * @var array
      */
-    private $winnerMoves;
-
-    /**
-     * @return string
-     */
-    public function getBotUnit(): string
-    {
-        return $this->botUnit;
-    }
-
-    /**
-     * @param string $botUnit
-     *
-     * @return Game
-     */
-    public function setBotUnit(string $botUnit): Game
-    {
-        $this->botUnit = $botUnit;
-
-        return $this;
-    }
+    private $winnerMoves = [];
 
     /**
      * @return string
@@ -142,14 +117,6 @@ class Game
         $this->isPlayerWinner = true;
 
         return $this;
-    }
-
-    /**
-     * @return Board
-     */
-    public function getBoardState(): Board
-    {
-        return $this->boardState;
     }
 
     /**

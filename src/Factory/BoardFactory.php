@@ -4,6 +4,7 @@ namespace TicTacToe\Factory;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use TicTacToe\Entity\Board;
+use TicTacToe\Entity\Move;
 
 /**
  * Class BoardFactory
@@ -59,7 +60,7 @@ class BoardFactory
      * @param Board $board
      * @param string $unit
      *
-     * @return ArrayCollection
+     * @return ArrayCollection|null
      */
     public function getBoardMovesGroupedByUnit(Board $board, string $unit): ?ArrayCollection
     {

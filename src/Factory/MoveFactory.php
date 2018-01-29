@@ -82,4 +82,45 @@ class MoveFactory
 
         return $winnerCombinations;
     }
+
+
+    /**
+     * @param ArrayCollection $moves
+     * @param string $unit
+     *
+     * @return array
+     */
+    public function getFilteredWinnerCombinations(ArrayCollection $moves, string $unit): array
+    {
+        $winnerCombinations = $this->getWinnerMovesCombinations($unit);
+
+        array_walk($winnerCombinations, function (&$value, $indexCombination) use (&$winnerCombinations, $moves) {
+            foreach ($value as $key => &$combination) {
+                if (in_array($combination, $moves->toArray())) {
+                    unset($value[$key]);
+                }
+            }
+            $winnerCombinations[$indexCombination] = $value;
+        });
+
+        return $winnerCombinations;
+    }
+
+    /**
+     * @param string $unit
+     * @param ArrayCollection $moves
+     *
+     * @return bool
+     */
+    public function checkWinner(string $unit, ArrayCollection $moves): bool
+    {
+        $filteredCombinations = $this->getFilteredWinnerCombinations($moves, $unit);
+        $isWinner = false;
+        foreach ($filteredCombinations as $combination) {
+            if (empty($combination)) {
+                $isWinner = true;
+            }
+        }
+        return $isWinner;
+    }
 }

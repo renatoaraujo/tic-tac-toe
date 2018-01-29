@@ -6,6 +6,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use TicTacToe\Kernel;
 
 /**
  * Class ExceptionSubscriber
@@ -15,6 +16,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class ExceptionSubscriber implements EventSubscriberInterface
 {
+    private $availablesErrorStatusCode = [500, 404, 400];
+
     /**
      * @param GetResponseForExceptionEvent $event
      */
@@ -26,7 +29,14 @@ class ExceptionSubscriber implements EventSubscriberInterface
             'message' => $exception->getMessage(),
         ];
 
-        $statusCode = ($exception->getCode() == 0) ? 500 : $exception->getCode();
+        if (getenv('APP_ENV') === 'dev') {
+            $exceptionData['file'] = $exception->getFile();
+            $exceptionData['line'] = $exception->getLine();
+            $exceptionData['stacktrace'] = $exception->getTrace();
+        }
+
+        $statusCode = !in_array($exception->getCode(), $this->availablesErrorStatusCode) ? 500 : $exception->getCode();
+
 
         $response = new JsonResponse($exceptionData, $statusCode);
         $event->setResponse($response);

@@ -4,8 +4,6 @@ services:
   tictactoe:
     container_name: renatoaraujo.tictactoe
     build: .
-    volumes:
-      - .:/var/www/html
     expose:
       - "9000"
 

@@ -46,6 +46,11 @@ class Game
     private $nextMove;
 
     /**
+     * @var array
+     */
+    private $winnerMoves;
+
+    /**
      * @return string
      */
     public function getBotUnit(): string
@@ -61,6 +66,7 @@ class Game
     public function setBotUnit(string $botUnit): Game
     {
         $this->botUnit = $botUnit;
+
         return $this;
     }
 
@@ -80,6 +86,7 @@ class Game
     public function setPlayerUnit(string $playerUnit): Game
     {
         $this->playerUnit = $playerUnit;
+
         return $this;
     }
 
@@ -97,6 +104,7 @@ class Game
     public function setTied(): Game
     {
         $this->isTied = true;
+
         return $this;
     }
 
@@ -114,6 +122,7 @@ class Game
     public function setBotWinner(): Game
     {
         $this->isBotWinner = true;
+
         return $this;
     }
 
@@ -131,6 +140,7 @@ class Game
     public function setPlayerWinner(): Game
     {
         $this->isPlayerWinner = true;
+
         return $this;
     }
 
@@ -150,6 +160,7 @@ class Game
     public function setBoardState(Board $boardState): Game
     {
         $this->boardState = $boardState;
+
         return $this;
     }
 
@@ -169,6 +180,27 @@ class Game
     public function setNextMove(array $nextMove): Game
     {
         $this->nextMove = $nextMove;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getWinnerMoves(): array
+    {
+        return $this->winnerMoves;
+    }
+
+    /**
+     * @param array $winnerMoves
+     *
+     * @return Game
+     */
+    public function setWinnerMoves(array $winnerMoves): Game
+    {
+        $this->winnerMoves = $winnerMoves;
+
         return $this;
     }
 }

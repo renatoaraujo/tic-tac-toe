@@ -55,33 +55,9 @@ class GameFactoryTest extends TestCase
         $this->board = $boardFactory->createBoard(self::$staticMoves);
     }
 
-    public function testCreateGame(): void
+    public function testCreateGameBotUnit(): void
     {
         $game = $this->factory->createGame(GameUnit::X_UNIT, $this->board);
         $this->assertSame(GameUnit::O_UNIT, $game->getBotUnit());
-    }
-
-    public function testCreateGameWithBotWinner(): void
-    {
-        $game = $this->factory->createGame(GameUnit::X_UNIT, $this->board, GameUnit::O_UNIT);
-        $this->assertTrue($game->isBotWinner());
-        $this->assertTrue(!$game->isPlayerWinner());
-        $this->assertTrue(!$game->isTied());
-    }
-
-    public function testCreateGameWithPlayerWinner(): void
-    {
-        $game = $this->factory->createGame(GameUnit::X_UNIT, $this->board, GameUnit::X_UNIT);
-        $this->assertTrue($game->isPlayerWinner());
-        $this->assertTrue(!$game->isBotWinner());
-        $this->assertTrue(!$game->isTied());
-    }
-
-    public function testCreateTiedGame(): void
-    {
-        $game = $this->factory->createGame(GameUnit::X_UNIT, $this->board, null);
-        $this->assertTrue($game->isTied());
-        $this->assertTrue(!$game->isBotWinner());
-        $this->assertTrue(!$game->isPlayerWinner());
     }
 }

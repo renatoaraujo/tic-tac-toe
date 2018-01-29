@@ -17,7 +17,7 @@ class GameFactory
     /**
      * @param string $playerUnit
      * @param null|Board $board
-     * @param null|string $unitWinner
+     * @param array $winner
      * @param array|null $nextMove
      *
      * @return Game
@@ -25,18 +25,19 @@ class GameFactory
     public function createGame(
         string $playerUnit,
         ?Board $board = null,
-        ?string $unitWinner = null,
+        array $winner = [],
         ?array $nextMove = []
     ): Game {
         $game = new Game();
         $game->setPlayerUnit($playerUnit);
         $game->setBotUnit(GameUnit::getInverseUnit($playerUnit));
 
-        if (!is_null($unitWinner)) {
-            ($unitWinner === $playerUnit) ? $game->setPlayerWinner() : $game->setBotWinner();
+        if (!empty($winner)) {
+            ($winner['unit'] === $playerUnit) ? $game->setPlayerWinner() : $game->setBotWinner();
+            $game->setWinnerMoves($winner['moves']);
         }
 
-        if ($board->isCompleted() && is_null($unitWinner)) {
+        if ($board->isCompleted() && empty($winner)) {
             $game->setTied();
         }
 

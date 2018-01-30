@@ -63,6 +63,7 @@ class Move
     public function setCoordY(int $coordY): Move
     {
         $this->coordY = $coordY;
+
         return $this;
     }
 
@@ -82,6 +83,7 @@ class Move
     public function setCoordX(int $coordX): Move
     {
         $this->coordX = $coordX;
+
         return $this;
     }
 
@@ -101,6 +103,7 @@ class Move
     public function setUnit(string $unit): Move
     {
         $this->unit = $unit;
+
         return $this;
     }
 }

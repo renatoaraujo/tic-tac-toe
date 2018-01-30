@@ -23,9 +23,6 @@ class BoardFactory
     {
         $board = new Board($moves);
 
-        /**
-         * @var ArrayCollection
-         */
         $emptyMoves = $this->getAllEmptyMovesFromBoard($board);
 
         if ($emptyMoves->count() === 0) {
@@ -76,5 +73,14 @@ class BoardFactory
         }
 
         return $moves;
+    }
+
+    public function updateBoard(Board $board, $move)
+    {
+        $emptyMoves = $this->getAllEmptyMovesFromBoard($board);
+
+        if ($emptyMoves->count() === 0) {
+            $board->setCompleted();
+        }
     }
 }

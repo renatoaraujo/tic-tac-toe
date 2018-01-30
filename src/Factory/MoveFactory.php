@@ -96,11 +96,11 @@ class MoveFactory
             $availableBoardMoves,
             &$winnerCombinations
         ) {
-            $possibleCombinations = $combination->exists(function (int $combinationKey, Move $combinationMove) use ($availableBoardMoves) {
+            $isAvailableCombination = $combination->exists(function (int $combinationKey, Move $combinationMove) use ($availableBoardMoves) {
                 return !in_array($combinationMove, $availableBoardMoves->toArray());
             });
 
-            if ($possibleCombinations) {
+            if ($isAvailableCombination) {
                 return $combination;
             }
         });

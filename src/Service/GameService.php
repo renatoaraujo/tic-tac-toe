@@ -76,26 +76,28 @@ class GameService implements MoveInterface
         $this->board = $this->boardFactory->createBoard($moves);
         $this->movesByPlayer = $this->boardFactory->getBoardMovesGroupedByUnit($this->board, $playerUnit);
 
-        $nextMove = $this->getNextMove($this->movesByPlayer, $playerUnit);
+        $nextMove = $this->getNextMove($playerUnit);
+
         return array_values((array) $nextMove);
     }
 
     /**
-     * @param ArrayCollection|null $movesByPlayer
      * @param string $playerUnit
      *
      * @return null|Move
      */
-    protected function getNextMove(?ArrayCollection $movesByPlayer, string $playerUnit): ?Move
+    protected function getNextMove(string $playerUnit): ?Move
     {
         try {
-            $predictedMove = $this->predictNextMove($movesByPlayer, $playerUnit);
+            $predictedMove = $this->predictNextMove($playerUnit);
             $nextMove = $this->board->getMoves()->filter(function (Move $move) use ($predictedMove, $playerUnit) {
                 if ($move == $predictedMove) {
                     $move->setUnit(GameUnit::getInverseUnit($playerUnit));
+
                     return $move;
                 }
             });
+
             return $nextMove->first();
         } catch (EmptyAvailableMovesException $exception) {
             return null;
@@ -113,69 +115,107 @@ class GameService implements MoveInterface
         $nextMove = $this->makeMove($requestGame->boardState, $requestGame->playerUnit);
         $this->setWinner($requestGame->playerUnit);
 
-        return $this->gameFactory->createGame(
-            $requestGame->playerUnit,
-            $this->board,
-            $this->winner,
-            $nextMove
-        );
+        return $this->gameFactory->createGame($requestGame->playerUnit, $this->board, $this->winner, $nextMove);
     }
 
     /**
-     * @param ArrayCollection $moves
-     * @param string $unit
-     *
      * @return Move
      * @throws EmptyAvailableMovesException
      */
-    protected function predictNextMove(ArrayCollection $moves, string $unit): Move
+    protected function predictNextMove(): Move
     {
-        $winnerCombinations = $this->moveFactory->getFilteredWinnerCombinations($moves, $unit);
         $availableMoves = $this->boardFactory->getAllEmptyMovesFromBoard($this->board);
 
         if ($availableMoves->isEmpty()) {
             throw new EmptyAvailableMovesException();
         }
 
-        $availableMoves->forAll(function (int $key, Move $availableMove) use ($unit) {
-            return $availableMove->setUnit($unit);
-        });
-        $middleMove = $this->getMiddleMove($availableMoves);
-        $mostProbableMove = ($middleMove->isEmpty()) ? $availableMoves->first() : $middleMove->first();
+        $mostProbableMove = $this->getMiddleMove($availableMoves)->first();
 
-        foreach ($winnerCombinations as &$winnerCombination) {
-            array_walk($winnerCombination, function (
-                &$combination,
-                $key
-            ) use (
-                &$winnerCombination,
+        if (!$mostProbableMove) {
+            $possibleWinnerCombinations = $this->moveFactory
+                ->getFilteredWinnerCombinations($availableMoves, $this->movesByPlayer);
+
+            $movesByPlayer = $this->movesByPlayer;
+            $availableNextMoves = $possibleWinnerCombinations->filter(function (ArrayCollection &$combination) use (
                 $availableMoves,
-                &$mostProbableMove,
-                $moves
+                $movesByPlayer,
+                &$possibleWinnerCombinations
             ) {
-                if (!in_array($combination, $availableMoves->toArray())) {
-                    if (!in_array($combination, $moves->toArray())) {
-                        unset($winnerCombination);
-                        return;
-                    }
-                    unset($winnerCombination[$key]);
-                }
 
-                if (count($winnerCombination) === 1) {
-                    $mostProbableMove = $combination;
+                $isFromBot = $combination->exists(function (int $combinationKey, Move $combinationMove) use (
+                    &$combination,
+                    $availableMoves,
+                    $movesByPlayer
+                ) {
+                    if (!in_array($combinationMove, $availableMoves->toArray())) {
+                        $combination->remove($combinationKey);
+
+                        return !$this->isMoveByPlayer($combinationMove);
+                    }
+                });
+
+                if (!$isFromBot) {
+                    return $combination;
                 }
             });
 
-            if (empty($winnerCombination)) {
-                unset($winnerCombination);
-            };
-        }
+            if (!$availableNextMoves->isEmpty()) {
+                $availableMovesIterator = $availableNextMoves->getIterator();
+                $availableMovesIterator->uasort(function (ArrayCollection $first, ArrayCollection $second) {
+                    if ($first->count() == $second->count()) {
+                        return 0;
+                    }
 
-        if (is_null($mostProbableMove) && !empty($winnerCombinations)) {
-            $mostProbableMove = current(min($winnerCombinations));
+                    return ($first->count() < $second->count()) ? -1 : 1;
+                });
+
+                $mostProbableMove = ($availableMovesIterator->current()->isEmpty()) ? $availableMoves->first() : $availableMovesIterator->current()->isEmpty();
+            }
         }
 
         return $mostProbableMove;
+    }
+
+    /**
+     * @param Move $move
+     *
+     * @return bool
+     */
+    protected function isMoveByPlayer(Move $move): bool
+    {
+        foreach ($this->movesByPlayer as $moveByPlayer) {
+            if ($move->getCoordY() === $moveByPlayer->getCoordY() && $move->getCoordX() === $moveByPlayer->getCoordX()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param array $winnerCombination
+     * @param ArrayCollection $availableMoves
+     *
+     * @return array
+     */
+    protected function filterWinnerCombinations(array $winnerCombination, ArrayCollection $availableMoves)
+    {
+        array_walk($winnerCombination, function ($combination, $key) use (&$winnerCombination, $availableMoves) {
+            if (!in_array($combination, $availableMoves->toArray())) {
+                if (!in_array($combination, $this->movesByPlayer->toArray())) {
+                    unset($winnerCombination);
+
+                    return;
+                }
+                unset($winnerCombination[$key]);
+            }
+
+            if (count($winnerCombination) === 1) {
+                dump($combination);
+            }
+        });
+
+        return $winnerCombination;
     }
 
     /**
@@ -185,8 +225,8 @@ class GameService implements MoveInterface
      */
     protected function getMiddleMove(ArrayCollection $availableMoves): ArrayCollection
     {
-        return $availableMoves->filter(function(Move $move) {
-            if ($move->getCoordY() === 1 && $move->getCoordX() === 1) {
+        return $availableMoves->filter(function (Move $move) {
+            if ($move->getCoordY() === 1 && $move->getCoordX() === 1 && empty($move->getUnit())) {
                 return $move;
             }
         });
@@ -242,14 +282,16 @@ class GameService implements MoveInterface
         }
 
         if (is_null($this->getWinnerUnit())) {
-            $movesByBot = $this->boardFactory->getBoardMovesGroupedByUnit($this->board, GameUnit::getInverseUnit($playerUnit));
+            $movesByBot = $this->boardFactory->getBoardMovesGroupedByUnit($this->board,
+                GameUnit::getInverseUnit($playerUnit));
             if ($this->moveFactory->checkWinner(GameUnit::getInverseUnit($playerUnit), $movesByBot)) {
                 $this->setWinnerUnit(GameUnit::getInverseUnit($playerUnit));
             }
         }
 
         if (!is_null($this->getWinnerUnit())) {
-            $filteredCombinations = $this->moveFactory->getFilteredWinnerCombinations($this->board->getMoves(), $this->getWinnerUnit());
+            $filteredCombinations = $this->moveFactory->getFilteredWinnerCombinations($this->board->getMoves(),
+                $this->getWinnerUnit());
             $winnerCombinations = $this->moveFactory->getWinnerMovesCombinations($this->getWinnerUnit());
             array_walk($filteredCombinations, function ($combination, $key) use ($winnerCombinations) {
                 if (empty($combination)) {

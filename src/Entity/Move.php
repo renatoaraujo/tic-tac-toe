@@ -21,9 +21,9 @@ class Move
     private $coordX;
 
     /**
-     * @var string
+     * @var null|string
      */
-    private $unit;
+    private $unit = null;
 
     /**
      * Move constructor.
@@ -88,7 +88,7 @@ class Move
     /**
      * @return string
      */
-    public function getUnit(): string
+    public function getUnit(): ?string
     {
         return $this->unit;
     }

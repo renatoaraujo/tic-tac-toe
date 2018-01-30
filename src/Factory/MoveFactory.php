@@ -42,68 +42,70 @@ class MoveFactory
         $move = new Move();
         $move->setCoordX($coordX);
         $move->setCoordY($coordY);
-        $move->setUnit($unit);
+
+        if (!empty($unit)) {
+            $move->setUnit($unit);
+        }
 
         return $move;
     }
 
     /**
-     * @param null|string $unit
-     *
-     * @return array
+     * @return ArrayCollection
      */
-    public function getWinnerMovesCombinations(?string $unit = null): array
+    public function getWinnerMovesCombinations(): ArrayCollection
     {
-        $winnerCombinations = [];
-        $winnerCombinations[] = [
-            new Move(2, 0, $unit),
-            new Move(1, 1, $unit),
-            new Move(0, 2, $unit),
-        ];
+        $winnerCombinations = new ArrayCollection();
+        $winnerCombinations->add(new ArrayCollection([
+            new Move(2, 0),
+            new Move(1, 1),
+            new Move(0, 2),
+        ]));
 
-        $winnerCombinations[] = [
-            new Move(0, 0, $unit),
-            new Move(1, 1, $unit),
-            new Move(2, 2, $unit),
-        ];
+        $winnerCombinations->add(new ArrayCollection([
+            new Move(0, 0),
+            new Move(1, 1),
+            new Move(2, 2),
+        ]));
 
         for ($row = 0; $row < 3; $row++) {
-            $winnerCombinations[] = [
-                new Move($row, 0, $unit),
-                new Move($row, 1, $unit),
-                new Move($row, 2, $unit),
-            ];
-            $winnerCombinations[] = [
-                new Move(0, $row, $unit),
-                new Move(1, $row, $unit),
-                new Move(2, $row, $unit),
-            ];
+            $winnerCombinations->add(new ArrayCollection([
+                new Move($row, 0),
+                new Move($row, 1),
+                new Move($row, 2),
+            ]));
+            $winnerCombinations->add(new ArrayCollection([
+                new Move(0, $row),
+                new Move(1, $row),
+                new Move(2, $row),
+            ]));
         }
 
         return $winnerCombinations;
     }
 
-
     /**
-     * @param ArrayCollection $moves
-     * @param string $unit
+     * @param ArrayCollection $availableMovesFromBoard
      *
-     * @return array
+     * @return ArrayCollection
      */
-    public function getFilteredWinnerCombinations(ArrayCollection $moves, string $unit): array
+    public function getFilteredWinnerCombinations(ArrayCollection $availableMovesFromBoard): ArrayCollection
     {
-        $winnerCombinations = $this->getWinnerMovesCombinations($unit);
+        $winnerCombinations = $this->getWinnerMovesCombinations();
+        $possibleWinnerCombinations = $winnerCombinations->filter(function(ArrayCollection $combination) use (
+            $availableMovesFromBoard,
+            &$winnerCombinations
+        ) {
+            $possibleWinnerCombinations = $combination->exists(function(int $combinationKey, Move $combinationMove) use ($availableMovesFromBoard) {
+                return !in_array($combinationMove, $availableMovesFromBoard->toArray());
+            });
 
-        array_walk($winnerCombinations, function (&$value, $indexCombination) use (&$winnerCombinations, $moves) {
-            foreach ($value as $key => &$combination) {
-                if (in_array($combination, $moves->toArray())) {
-                    unset($value[$key]);
-                }
+            if ($possibleWinnerCombinations) {
+                return $combination;
             }
-            $winnerCombinations[$indexCombination] = $value;
         });
 
-        return $winnerCombinations;
+        return $possibleWinnerCombinations;
     }
 
     /**

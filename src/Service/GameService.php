@@ -93,7 +93,6 @@ class GameService implements MoveInterface
             $nextMove = $this->board->getMoves()->filter(function (Move $move) use ($predictedMove, $playerUnit) {
                 if ($move == $predictedMove) {
                     $move->setUnit(GameUnit::getInverseUnit($playerUnit));
-
                     return $move;
                 }
             });
@@ -133,24 +132,21 @@ class GameService implements MoveInterface
         $mostProbableMove = $this->getMiddleMove($availableMoves)->first();
 
         if (!$mostProbableMove) {
-            $possibleWinnerCombinations = $this->moveFactory
+            $possibleCombinations = $this->moveFactory
                 ->getFilteredWinnerCombinations($availableMoves, $this->movesByPlayer);
 
-            $movesByPlayer = $this->movesByPlayer;
-            $availableNextMoves = $possibleWinnerCombinations->filter(function (ArrayCollection &$combination) use (
-                $availableMoves,
-                $movesByPlayer,
-                &$possibleWinnerCombinations
+            $availableNextMoves = $possibleCombinations->filter(function (ArrayCollection &$combination) use (
+                $availableMoves
             ) {
-
-                $isFromBot = $combination->exists(function (int $combinationKey, Move $combinationMove) use (
+                $isFromBot = $combination->exists(function (
+                    int $combinationKey,
+                    Move $combinationMove
+                ) use (
                     &$combination,
-                    $availableMoves,
-                    $movesByPlayer
+                    $availableMoves
                 ) {
                     if (!in_array($combinationMove, $availableMoves->toArray())) {
                         $combination->remove($combinationKey);
-
                         return !$this->isMoveByPlayer($combinationMove);
                     }
                 });
@@ -161,8 +157,8 @@ class GameService implements MoveInterface
             });
 
             if (!$availableNextMoves->isEmpty()) {
-                $availableMovesIterator = $availableNextMoves->getIterator();
-                $availableMovesIterator->uasort(function (ArrayCollection $first, ArrayCollection $second) {
+                $iterator = $availableNextMoves->getIterator();
+                $iterator->uasort(function (ArrayCollection $first, ArrayCollection $second) {
                     if ($first->count() == $second->count()) {
                         return 0;
                     }
@@ -170,7 +166,7 @@ class GameService implements MoveInterface
                     return ($first->count() < $second->count()) ? -1 : 1;
                 });
 
-                $mostProbableMove = ($availableMovesIterator->current()->isEmpty()) ? $availableMoves->first() : $availableMovesIterator->current()->isEmpty();
+                $mostProbableMove = ($iterator->current()->isEmpty()) ? $availableMoves->first() : $iterator->current()->isEmpty();
             }
         }
 
@@ -282,16 +278,20 @@ class GameService implements MoveInterface
         }
 
         if (is_null($this->getWinnerUnit())) {
-            $movesByBot = $this->boardFactory->getBoardMovesGroupedByUnit($this->board,
-                GameUnit::getInverseUnit($playerUnit));
+            $movesByBot = $this->boardFactory->getBoardMovesGroupedByUnit(
+                $this->board,
+                GameUnit::getInverseUnit($playerUnit)
+            );
             if ($this->moveFactory->checkWinner(GameUnit::getInverseUnit($playerUnit), $movesByBot)) {
                 $this->setWinnerUnit(GameUnit::getInverseUnit($playerUnit));
             }
         }
 
         if (!is_null($this->getWinnerUnit())) {
-            $filteredCombinations = $this->moveFactory->getFilteredWinnerCombinations($this->board->getMoves(),
-                $this->getWinnerUnit());
+            $filteredCombinations = $this->moveFactory->getFilteredWinnerCombinations(
+                $this->board->getMoves(),
+                $this->getWinnerUnit()
+            );
             $winnerCombinations = $this->moveFactory->getWinnerMovesCombinations($this->getWinnerUnit());
             array_walk($filteredCombinations, function ($combination, $key) use ($winnerCombinations) {
                 if (empty($combination)) {

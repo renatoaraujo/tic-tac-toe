@@ -85,27 +85,27 @@ class MoveFactory
     }
 
     /**
-     * @param ArrayCollection $availableMovesFromBoard
+     * @param ArrayCollection $availableBoardMoves
      *
      * @return ArrayCollection
      */
-    public function getFilteredWinnerCombinations(ArrayCollection $availableMovesFromBoard): ArrayCollection
+    public function getFilteredWinnerCombinations(ArrayCollection $availableBoardMoves): ArrayCollection
     {
         $winnerCombinations = $this->getWinnerMovesCombinations();
-        $possibleWinnerCombinations = $winnerCombinations->filter(function(ArrayCollection $combination) use (
-            $availableMovesFromBoard,
+        $possibleCombinations = $winnerCombinations->filter(function (ArrayCollection $combination) use (
+            $availableBoardMoves,
             &$winnerCombinations
         ) {
-            $possibleWinnerCombinations = $combination->exists(function(int $combinationKey, Move $combinationMove) use ($availableMovesFromBoard) {
-                return !in_array($combinationMove, $availableMovesFromBoard->toArray());
+            $possibleCombinations = $combination->exists(function (int $combinationKey, Move $combinationMove) use ($availableBoardMoves) {
+                return !in_array($combinationMove, $availableBoardMoves->toArray());
             });
 
-            if ($possibleWinnerCombinations) {
+            if ($possibleCombinations) {
                 return $combination;
             }
         });
 
-        return $possibleWinnerCombinations;
+        return $possibleCombinations;
     }
 
     /**

@@ -77,66 +77,42 @@ POST http://localhost:8000/api/move
 
 Response 200 OK
 {
-    "botUnit": "O",
     "playerUnit": "X",
-    "tied": false,
-    "botWinner": false,
-    "playerWinner": false,
-    "boardState": {
-        "moves": [
-            {
-                "coordY": 0,
-                "coordX": 0,
-                "unit": "X"
-            },
-            {
-                "coordY": 1,
-                "coordX": 0,
-                "unit": "O"
-            },
-            {
-                "coordY": 2,
-                "coordX": 0,
-                "unit": "X"
-            },
-            {
-                "coordY": 0,
-                "coordX": 1,
-                "unit": "X"
-            },
-            {
-                "coordY": 1,
-                "coordX": 1,
-                "unit": "O"
-            },
-            {
-                "coordY": 2,
-                "coordX": 1,
-                "unit": "O"
-            },
-            {
-                "coordY": 0,
-                "coordX": 2,
-                "unit": "X"
-            },
-            {
-                "coordY": 1,
-                "coordX": 2,
-                "unit": "X"
-            },
-            {
-                "coordY": 2,
-                "coordX": 2,
-                "unit": "X"
-            }
+    "boardState": [
+        [
+            "X",
+            "X",
+            "O"
         ],
-        "completed": false
-    },
-    "nextMove": [
-        0,
-        2,
-        "O"
-    ]
+        [
+            "X",
+            "O",
+            "O"
+        ],
+        [
+            "X",
+            "O",
+            "X"
+        ]
+    ],
+    "nextMove": [],
+    "winner": {
+        "unit": "X",
+        "moves": [
+            [
+                0,
+                0
+            ],
+            [
+                0,
+                1
+            ],
+            [
+                0,
+                2
+            ]
+        ]
+    }
 }
 ```
 

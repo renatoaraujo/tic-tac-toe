@@ -19,9 +19,13 @@ class ApiRequestValidator
      * @return bool
      * @throws InvalidRequestException
      */
-    public static function isValid(string $content): bool
+    public function isValid(?string $content): bool
     {
         $body = json_decode($content, true);
+
+        if (empty($content)) {
+            throw new InvalidRequestException("Invalid request. Empty body.");
+        }
 
         return (
             self::isValidRequestBodyContent($body) &&
@@ -36,7 +40,7 @@ class ApiRequestValidator
      * @return bool
      * @throws InvalidRequestException
      */
-    public static function isValidRequestBodyContent(array $body): bool
+    public function isValidRequestBodyContent(array $body): bool
     {
         if (!array_key_exists('playerUnit', $body)) {
             throw new InvalidRequestException("You must provide the playerUnit.");
@@ -55,7 +59,7 @@ class ApiRequestValidator
      * @return bool
      * @throws InvalidRequestException
      */
-    public static function hasValidBoardState(array $boardState): bool
+    public function hasValidBoardState(array $boardState): bool
     {
         if (empty($boardState) || count($boardState) !== 3) {
             throw new InvalidRequestException("The boardState is invalid! A valid boardState has 3 lines.");
@@ -84,7 +88,7 @@ class ApiRequestValidator
      * @return bool
      * @throws InvalidRequestException
      */
-    public static function hasValidPlayerUnit(string $playerUnit): bool
+    public function hasValidPlayerUnit(string $playerUnit): bool
     {
         if ($playerUnit != GameUnit::O_UNIT && $playerUnit != GameUnit::X_UNIT) {
             throw new InvalidRequestException("The playerUnit is invalid! Accept only 'X' or 'O' options.");

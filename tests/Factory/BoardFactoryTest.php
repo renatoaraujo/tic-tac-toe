@@ -15,42 +15,26 @@ use TicTacToe\Factory\MoveFactory;
  */
 class BoardFactoryTest extends TestCase
 {
-    /**
-     * @var BoardFactory
-     */
-    private $factory;
-
-    /**
-     * @var ArrayCollection
-     */
-    private static $staticMoves;
-
-    /**
-     * Create static moves for testing
-     */
-    public static function setUpBeforeClass()
+    public function testCreateBoard(): void
     {
-        $boardState = [
-            ["X", "O", ""],
-            ["X", "O", "O"],
-            ["O", "X", "X"]
-        ];
+        $arrayCollection = $this->createMock('Doctrine\Common\Collections\ArrayCollection');
+        $moveFactory = $this->createMock('TicTacToe\Factory\MoveFactory');
+        $moveFactory->expects($this->any())
+            ->method('createMovesFromBoardState')
+            ->with([
+                ["X", "O", "O"],
+                ["X", "O", "O"],
+                ["O", "X", "X"],
+            ])
+            ->will($this->returnValue($arrayCollection));
 
-        $moveFactory = new MoveFactory();
-        self::$staticMoves = $moveFactory->createMovesFromBoardState($boardState);
-    }
+        $boardFactory = $this->getMockBuilder('TicTacToe\Factory\BoardFactory')
+            ->getMock();
 
-    public function setUp(): void
-    {
-        $this->factory = new BoardFactory();
-    }
-
-    /**
-     * Test board with moves
-     */
-    public function testCreateBoardWithMoves(): void
-    {
-        $board = $this->factory->createBoard(self::$staticMoves);
-        $this->assertAttributeCount(9, 'moves', $board);
+        $this->assertInstanceOf("TicTacToe\Entity\Board", $boardFactory->createBoard($arrayCollection));
+        $this->assertInstanceOf(
+            "Doctrine\Common\Collections\ArrayCollection",
+            $boardFactory->createBoard($arrayCollection)->getMoves()
+        );
     }
 }

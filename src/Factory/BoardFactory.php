@@ -44,11 +44,14 @@ class BoardFactory
          */
         $moves = clone $board->getMoves();
 
-        foreach ($moves as $move) {
-            if (!empty($move->getUnit())) {
-                $moves->removeElement($move);
+        if ($moves->toArray()) {
+            foreach ($moves->toArray() as $move) {
+                if (!empty($move->getUnit())) {
+                    $moves->removeElement($move);
+                }
             }
         }
+
 
         return $moves;
     }
@@ -75,6 +78,10 @@ class BoardFactory
         return $moves;
     }
 
+    /**
+     * @param Board $board
+     * @param $move
+     */
     public function updateBoard(Board $board, $move)
     {
         $emptyMoves = $this->getAllEmptyMovesFromBoard($board);

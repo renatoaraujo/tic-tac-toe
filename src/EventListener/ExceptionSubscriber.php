@@ -16,7 +16,7 @@ use TicTacToe\Kernel;
  */
 class ExceptionSubscriber implements EventSubscriberInterface
 {
-    private $availablesErrorStatusCode = [500, 404, 400];
+    private $availablesErrorStatusCode = [500, 404, 400, 412];
 
     /**
      * @param GetResponseForExceptionEvent $event

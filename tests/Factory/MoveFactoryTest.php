@@ -13,24 +13,20 @@ use TicTacToe\Factory\MoveFactory;
  */
 class MoveFactoryTest extends TestCase
 {
-    /**
-     * @var MoveFactory
-     */
-    private $factory;
-
-    public function setUp()
-    {
-        $this->factory = new MoveFactory();
-    }
-
     public function testCreateMovesFromBoardState(): void
     {
+        $moveFactory = $this->createMock('TicTacToe\Factory\MoveFactory');
         $boardState = [
-            ["X", "O", ""],
             ["X", "O", "O"],
-            ["O",  "X", "X"]
+            ["X", "O", "O"],
+            ["O", "X", "X"],
         ];
-        $moves = $this->factory->createMovesFromBoardState($boardState);
-        $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $moves);
+        $this->assertInstanceOf("Doctrine\Common\Collections\ArrayCollection", $moveFactory->createMovesFromBoardState($boardState));
+    }
+
+    public function testCreateMove()
+    {
+        $moveFactory = $this->createMock('TicTacToe\Factory\MoveFactory');
+        $this->assertInstanceOf('TicTacToe\Entity\Move', $moveFactory->createMove(1, 2, 'O'));
     }
 }

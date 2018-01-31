@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1517418804">
-  <project timestamp="1517418804">
+<coverage generated="1517419188">
+  <project timestamp="1517419188">
     <package name="TicTacToe\Controller">
       <file name="/Users/renato/Projetos/VazarDoPais/Tests/TicTacToe/src/Controller/ApiController.php">
         <class name="TicTacToe\Controller\ApiController" namespace="TicTacToe\Controller" fullPackage="TicTacToe" package="TicTacToe">
@@ -66,19 +66,19 @@
         </class>
         <line num="31" type="method" name="getCoordY" visibility="public" complexity="1" crap="1" count="1"/>
         <line num="33" type="stmt" count="1"/>
-        <line num="41" type="method" name="setCoordY" visibility="public" complexity="1" crap="1" count="2"/>
-        <line num="43" type="stmt" count="2"/>
-        <line num="45" type="stmt" count="2"/>
+        <line num="41" type="method" name="setCoordY" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="43" type="stmt" count="1"/>
+        <line num="45" type="stmt" count="1"/>
         <line num="51" type="method" name="getCoordX" visibility="public" complexity="1" crap="1" count="1"/>
         <line num="53" type="stmt" count="1"/>
-        <line num="61" type="method" name="setCoordX" visibility="public" complexity="1" crap="1" count="2"/>
-        <line num="63" type="stmt" count="2"/>
-        <line num="65" type="stmt" count="2"/>
+        <line num="61" type="method" name="setCoordX" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="63" type="stmt" count="1"/>
+        <line num="65" type="stmt" count="1"/>
         <line num="71" type="method" name="getUnit" visibility="public" complexity="2" crap="2" count="1"/>
         <line num="73" type="stmt" count="1"/>
-        <line num="81" type="method" name="setUnit" visibility="public" complexity="1" crap="1" count="2"/>
-        <line num="83" type="stmt" count="2"/>
-        <line num="85" type="stmt" count="2"/>
+        <line num="81" type="method" name="setUnit" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="83" type="stmt" count="1"/>
+        <line num="85" type="stmt" count="1"/>
         <metrics loc="87" ncloc="48" classes="1" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="9" elements="15" coveredelements="15"/>
       </file>
     </package>
@@ -158,20 +158,20 @@
         <class name="TicTacToe\Factory\MoveFactory" namespace="TicTacToe\Factory" fullPackage="TicTacToe" package="TicTacToe">
           <metrics complexity="15" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="22" coveredstatements="22" elements="30" coveredelements="30"/>
         </class>
-        <line num="22" type="method" name="createMovesFromBoardState" visibility="public" complexity="2" crap="2" count="2"/>
-        <line num="24" type="stmt" count="2"/>
-        <line num="25" type="stmt" count="2"/>
-        <line num="26" type="method" name="anonymousFunction:26#96" complexity="1" crap="1" count="2"/>
-        <line num="27" type="stmt" count="2"/>
-        <line num="28" type="stmt" count="2"/>
-        <line num="31" type="stmt" count="2"/>
-        <line num="41" type="method" name="createMove" visibility="public" complexity="3" crap="3" count="2"/>
-        <line num="43" type="stmt" count="2"/>
-        <line num="44" type="stmt" count="2"/>
-        <line num="45" type="stmt" count="2"/>
-        <line num="47" type="stmt" count="2"/>
-        <line num="48" type="stmt" count="2"/>
-        <line num="51" type="stmt" count="2"/>
+        <line num="22" type="method" name="createMovesFromBoardState" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="24" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="26" type="method" name="anonymousFunction:26#96" complexity="1" crap="1" count="1"/>
+        <line num="27" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="31" type="stmt" count="1"/>
+        <line num="41" type="method" name="createMove" visibility="public" complexity="3" crap="3" count="1"/>
+        <line num="43" type="stmt" count="1"/>
+        <line num="44" type="stmt" count="1"/>
+        <line num="45" type="stmt" count="1"/>
+        <line num="47" type="stmt" count="1"/>
+        <line num="48" type="stmt" count="1"/>
+        <line num="51" type="stmt" count="1"/>
         <line num="57" type="method" name="getWinnerMovesCombinations" visibility="protected" complexity="2" crap="2" count="1"/>
         <line num="59" type="stmt" count="1"/>
         <line num="60" type="stmt" count="1"/>

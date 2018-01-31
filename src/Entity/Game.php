@@ -21,16 +21,6 @@ class Game
     private $isTied = false;
 
     /**
-     * @var boolean
-     */
-    private $isBotWinner = false;
-
-    /**
-     * @var boolean
-     */
-    private $isPlayerWinner = false;
-
-    /**
      * @var Board
      */
     private $boardState;
@@ -41,9 +31,9 @@ class Game
     private $nextMove;
 
     /**
-     * @var array
+     * @var Winner
      */
-    private $winnerMoves = [];
+    private $winner;
 
     /**
      * @return string
@@ -84,42 +74,6 @@ class Game
     }
 
     /**
-     * @return bool
-     */
-    public function isBotWinner(): bool
-    {
-        return $this->isBotWinner;
-    }
-
-    /**
-     * @return Game
-     */
-    public function setBotWinner(): Game
-    {
-        $this->isBotWinner = true;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPlayerWinner(): bool
-    {
-        return $this->isPlayerWinner;
-    }
-
-    /**
-     * @return Game
-     */
-    public function setPlayerWinner(): Game
-    {
-        $this->isPlayerWinner = true;
-
-        return $this;
-    }
-
-    /**
      * @param Board $boardState
      *
      * @return Game
@@ -152,21 +106,21 @@ class Game
     }
 
     /**
-     * @return array
+     * @return Winner
      */
-    public function getWinnerMoves(): array
+    public function getWinner(): ?Winner
     {
-        return $this->winnerMoves;
+        return $this->winner;
     }
 
     /**
-     * @param array $winnerMoves
+     * @param Winner $winner
      *
      * @return Game
      */
-    public function setWinnerMoves(array $winnerMoves): Game
+    public function setWinner(Winner $winner): Game
     {
-        $this->winnerMoves = $winnerMoves;
+        $this->winner = $winner;
 
         return $this;
     }

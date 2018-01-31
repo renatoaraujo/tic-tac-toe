@@ -4,6 +4,7 @@ namespace TicTacToe\Factory;
 
 use TicTacToe\Entity\Board;
 use TicTacToe\Entity\Game;
+use TicTacToe\Entity\Winner;
 use TicTacToe\Util\GameUnit;
 
 /**
@@ -17,7 +18,7 @@ class GameFactory
     /**
      * @param string $playerUnit
      * @param null|Board $board
-     * @param array $winner
+     * @param null|Winner $winner
      * @param array|null $nextMove
      *
      * @return Game
@@ -25,21 +26,13 @@ class GameFactory
     public function createGame(
         string $playerUnit,
         ?Board $board = null,
-        array $winner,
-        ?array $nextMove = []
+        ?array $nextMove = [],
+        ?Winner $winner = null
     ): Game {
         $game = new Game();
         $game->setPlayerUnit($playerUnit);
 
-        $winnerUnit = isset($winner['unit']) ? $winner['unit'] : null;
-        $winnerMoves = isset($winner['moves']) ? $winner['moves'] : null;
-
-        if (!is_null($winnerUnit)) {
-            ($winner['unit'] === $playerUnit) ? $game->setPlayerWinner() : $game->setBotWinner();
-            $game->setWinnerMoves($winnerMoves);
-        }
-
-        if ($board->isCompleted() && is_null($winnerUnit)) {
+        if ($board->isCompleted()) {
             $game->setTied();
         }
 

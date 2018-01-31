@@ -26,28 +26,6 @@ class Move
     private $unit = null;
 
     /**
-     * Move constructor.
-     *
-     * @param int|null $coordY
-     * @param int|null $coordX
-     * @param null|string $unit
-     */
-    public function __construct(?int $coordY = null, ?int $coordX = null, ?string $unit = null)
-    {
-        if (!is_null($coordY)) {
-            $this->coordY = $coordY;
-        }
-
-        if (!is_null($coordX)) {
-            $this->coordX = $coordX;
-        }
-
-        if (!is_null($unit)) {
-            $this->unit = $unit;
-        }
-    }
-
-    /**
      * @return int
      */
     public function getCoordY(): int

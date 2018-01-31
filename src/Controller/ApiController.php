@@ -7,8 +7,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use TicTacToe\Entity\Game;
 use TicTacToe\Exception\InvalidRequestException;
+use TicTacToe\Util\GameStatus;
+use TicTacToe\Util\GameUnit;
 use TicTacToe\Util\Validator\ApiRequestValidator;
+use TicTacToe\Util\WinnerMoves;
 
 /**
  * Class ApiController
@@ -33,7 +37,36 @@ class ApiController extends Controller
         if (!ApiRequestValidator::isValid($request->getContent())) {
             throw new InvalidRequestException();
         }
-        $game = $this->get('TicTacToe\Service\GameService')->createGame($request->getContent());
-        return $this->json($game);
+        $requestContent = json_decode($request->getContent());
+
+        $nextMove = $this->get('TicTacToe\Service\MoveService')
+            ->makeMove($requestContent->boardState, $requestContent->playerUnit);
+        return $this->createResponse($requestContent->boardState, $requestContent->playerUnit, $nextMove);
+    }
+
+    /**
+     * @param array $boardState
+     * @param string $playerUnit
+     * @param array $nextMove
+     *
+     * @return JsonResponse
+     */
+    private function createResponse(array $boardState, string $playerUnit, array $nextMove)
+    {
+        $response = [
+            'playerUnit' => $playerUnit,
+            'boardState' => $boardState,
+            'nextMove' => $nextMove,
+        ];
+
+        $gameStatus = new GameStatus($boardState, $playerUnit, $nextMove);
+
+        if ($gameStatus->isTied()) {
+            $response['tied'] = $gameStatus->isTied();
+        } elseif (!empty($gameStatus->getWinner())) {
+            $response['winner'] = $gameStatus->getWinner();
+        }
+
+        return new JsonResponse($response, 200);
     }
 }

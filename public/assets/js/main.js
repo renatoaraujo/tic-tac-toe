@@ -11,19 +11,24 @@ var service = {
             processData: false,
             contentType: 'application/json'
         }).done(function (data) {
-            if (data.playerWinner) {
-                service.markWinnerMoves(data.winnerMoves);
-                service.finish("alert-success", "Well done! You are the winner!");
-                return;
-            } else if (data.botWinner) {
-                service.markWinnerMoves(data.winnerMoves);
-                service.finish("alert-danger", "You lose! Don't give up!");
-            } else if (data.tied) {
-                service.finish("alert-info", "Tied game! best of three?");
-                return;
+            if (data.winner) {
+                if (data.winner.unit == playerUnit) {
+                    service.markWinnerMoves(data.winner.moves, 'bg-success');
+                    service.finish("alert-success", "Well done! You are the winner!");
+                    return;
+                } else {
+                    service.markWinnerMoves(data.winner.moves, 'bg-danger');
+                    service.finish("alert-danger", "You lose!");
+                    service.markBotMove(data.nextMove[0], data.nextMove[1], data.nextMove[2]);
+                    return;
+                }
             }
+
+            if (data.tied) {
+                service.finish("alert-info", "Tied! best of three?!");
+            }
+
             service.markBotMove(data.nextMove[0], data.nextMove[1], data.nextMove[2]);
-            return;
         });
     },
     finish: function(alertType, message) {
@@ -35,9 +40,9 @@ var service = {
         tableElement.data("unit", unit);
         tableElement.html("<i class='fa fa-circle-o fa-5x'></i>");
     },
-    markWinnerMoves: function(winnerMoves) {
+    markWinnerMoves: function(winnerMoves, bgClass) {
         $.each(winnerMoves, function(key, val) {
-            $("td").filter('[data-x=' + val[0] + ']').filter('[data-y=' + val[1] + ']').addClass('bg-success');
+            $("td").filter('[data-x=' + val[0] + ']').filter('[data-y=' + val[1] + ']').addClass(bgClass);
         });
     }
 };
@@ -72,6 +77,9 @@ $('.reset').on("click", function () {
     $("td").each(function () {
         if ($(this).hasClass("bg-success")) {
             $(this).removeClass("bg-success");
+        }
+        if ($(this).hasClass("bg-danger")) {
+            $(this).removeClass("bg-danger");
         }
         $(this).data("unit", "");
         $(this).html("");

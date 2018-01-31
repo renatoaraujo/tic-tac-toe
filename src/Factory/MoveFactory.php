@@ -4,6 +4,7 @@ namespace TicTacToe\Factory;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use TicTacToe\Entity\Move;
+use TicTacToe\Util\WinnerMoves;
 
 /**
  * Class MoveFactory
@@ -21,9 +22,9 @@ class MoveFactory
     public function createMovesFromBoardState(array $boardState): ArrayCollection
     {
         $moves = new ArrayCollection();
-        foreach ($boardState as $lineIndex => $lineState) {
-            array_walk($lineState, function (&$v, $k) use ($moves, $lineIndex) {
-                $moves->add($this->createMove($v, $lineIndex, $k));
+        foreach ($boardState as $x => $lineState) {
+            array_walk($lineState, function (string &$unit, $y) use (&$moves, $x) {
+                $moves->add($this->createMove($y, $x, $unit));
             });
         }
 
@@ -31,17 +32,17 @@ class MoveFactory
     }
 
     /**
-     * @param string $unit
-     * @param int $coordX
      * @param int $coordY
+     * @param int $coordX
+     * @param null|string $unit
      *
      * @return Move
      */
-    public function createMove(?string $unit, int $coordX, int $coordY): Move
+    public function createMove(int $coordY, int $coordX, ?string $unit = null): Move
     {
         $move = new Move();
-        $move->setCoordX($coordX);
         $move->setCoordY($coordY);
+        $move->setCoordX($coordX);
 
         if (!empty($unit)) {
             $move->setUnit($unit);
@@ -53,33 +54,18 @@ class MoveFactory
     /**
      * @return ArrayCollection
      */
-    public function getWinnerMovesCombinations(): ArrayCollection
+    protected function getWinnerMovesCombinations(): ArrayCollection
     {
+        $winnerMoves = WinnerMoves::getWinnerMoves();
         $winnerCombinations = new ArrayCollection();
-        $winnerCombinations->add(new ArrayCollection([
-            new Move(2, 0),
-            new Move(1, 1),
-            new Move(0, 2),
-        ]));
 
-        $winnerCombinations->add(new ArrayCollection([
-            new Move(0, 0),
-            new Move(1, 1),
-            new Move(2, 2),
-        ]));
-
-        for ($row = 0; $row < 3; $row++) {
-            $winnerCombinations->add(new ArrayCollection([
-                new Move($row, 0),
-                new Move($row, 1),
-                new Move($row, 2),
-            ]));
-            $winnerCombinations->add(new ArrayCollection([
-                new Move(0, $row),
-                new Move(1, $row),
-                new Move(2, $row),
-            ]));
-        }
+        array_walk($winnerMoves, function ($combination) use (&$winnerCombinations) {
+            $combinationColletion = new ArrayCollection();
+            foreach ($combination as $move) {
+                $combinationColletion->add($this->createMove(...$move));
+            }
+            $winnerCombinations->add($combinationColletion);
+        });
 
         return $winnerCombinations;
     }
@@ -106,23 +92,5 @@ class MoveFactory
         });
 
         return $possibleCombinations;
-    }
-
-    /**
-     * @param string $unit
-     * @param ArrayCollection $moves
-     *
-     * @return bool
-     */
-    public function checkWinner(string $unit, ArrayCollection $moves): bool
-    {
-        $filteredCombinations = $this->getFilteredWinnerCombinations($moves, $unit);
-        $isWinner = false;
-        foreach ($filteredCombinations as $combination) {
-            if (empty($combination)) {
-                $isWinner = true;
-            }
-        }
-        return $isWinner;
     }
 }

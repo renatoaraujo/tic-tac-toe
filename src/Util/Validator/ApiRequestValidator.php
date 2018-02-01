@@ -28,9 +28,9 @@ class ApiRequestValidator
         }
 
         return (
-            self::isValidRequestBodyContent($body) &&
-            self::hasValidBoardState($body['boardState']) &&
-            self::hasValidPlayerUnit($body['playerUnit'])
+            $this->isValidRequestBodyContent($body) &&
+            $this->hasValidBoardState($body['boardState']) &&
+            $this->hasValidPlayerUnit($body['playerUnit'])
         );
     }
 

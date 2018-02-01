@@ -34,20 +34,16 @@ class ApiController extends Controller
      */
     public function moveAction(Request $request): JsonResponse
     {
-        try {
-            $content = $request->getContent();
+        $content = $request->getContent();
 
-            $validator = new ApiRequestValidator();
-            $validator->isValid($content);
+        $validator = new ApiRequestValidator();
+        $validator->isValid($content);
 
-            $requestContent = json_decode($content);
-            $nextMove = $this->get('TicTacToe\Service\MoveService')
-                ->makeMove($requestContent->boardState, $requestContent->playerUnit);
+        $requestContent = json_decode($content);
+        $nextMove = $this->get('TicTacToe\Service\MoveService')
+            ->makeMove($requestContent->boardState, $requestContent->playerUnit);
 
-            return $this->createResponse($requestContent->boardState, $requestContent->playerUnit, $nextMove);
-        } catch (InvalidRequestException $exception) {
-            throw $exception;
-        }
+        return $this->createResponse($requestContent->boardState, $requestContent->playerUnit, $nextMove);
     }
 
     /**

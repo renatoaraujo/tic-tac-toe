@@ -107,9 +107,11 @@ class MoveService implements MoveInterface
         $nextMovesByBot = $this->getNextMovesByUnit($botCombinations);
         $willBotWin = ($nextMovesByBot->first() && $nextMovesByBot->first()->count() == 1);
 
+        if ($willBotWin) {
+            $nextMove = $this->filterNextMove($nextMovesByBot);
+        }
+
         if ($willPlayerWin && !$willBotWin) {
-            $nextMove = $this->filterNextMove($nextMovesByPlayer);
-        } elseif ($willBotWin || !$willPlayerWin && !$willBotWin) {
             $nextMove = $this->filterNextMove($nextMovesByBot);
         }
 
@@ -129,6 +131,9 @@ class MoveService implements MoveInterface
                 return $mostProbableMove->first();
             }
         }
+
+        dump($nextMoves);
+        die;
 
         $nextMoves->filter(function (ArrayCollection $arrayCollection) use (&$nextMove) {
             return $arrayCollection->first();

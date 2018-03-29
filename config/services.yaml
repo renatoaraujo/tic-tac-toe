@@ -13,10 +13,6 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    TicTacToe\Service\:
-        resource: '../src/Service'
-        public: true
-
     TicTacToe\Factory\:
         resource: '../src/Factory'
         public: true

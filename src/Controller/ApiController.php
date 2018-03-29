@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use TicTacToe\Entity\Game;
 use TicTacToe\Exception\InvalidRequestException;
+use TicTacToe\Service\MoveInterface;
 use TicTacToe\Util\GameStatus;
 use TicTacToe\Util\GameUnit;
 use TicTacToe\Util\Validator\ApiRequestValidator;
@@ -32,7 +33,7 @@ class ApiController extends Controller
      * @return JsonResponse
      * @throws InvalidRequestException
      */
-    public function moveAction(Request $request): JsonResponse
+    public function moveAction(MoveInterface $move, Request $request): JsonResponse
     {
         $content = $request->getContent();
 
@@ -40,8 +41,7 @@ class ApiController extends Controller
         $validator->isValid($content);
 
         $requestContent = json_decode($content);
-        $nextMove = $this->get('TicTacToe\Service\MoveService')
-            ->makeMove($requestContent->boardState, $requestContent->playerUnit);
+        $nextMove = $move->makeMove($requestContent->boardState, $requestContent->playerUnit);
 
         return $this->createResponse($requestContent->boardState, $requestContent->playerUnit, $nextMove);
     }

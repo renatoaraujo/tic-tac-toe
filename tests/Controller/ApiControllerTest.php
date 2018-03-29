@@ -5,6 +5,7 @@ namespace TicTacToe\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use TicTacToe\Controller\ApiController;
 use TicTacToe\Exception\InvalidRequestException;
+use TicTacToe\Service\MoveInterface;
 
 /**
  * Class ApiControllerTest
@@ -14,7 +15,6 @@ use TicTacToe\Exception\InvalidRequestException;
  */
 class ApiControllerTest extends WebTestCase
 {
-
     /**
      * @dataProvider validRequestProvider
      *
@@ -26,22 +26,15 @@ class ApiControllerTest extends WebTestCase
     {
         $request = $this->createMock("Symfony\Component\HttpFoundation\Request");
         $container = $this->createMock("Symfony\Component\DependencyInjection\ContainerInterface");
-        $service = $this->getMockBuilder("TicTacToe\Service\MoveService")
-            ->disableOriginalConstructor()
-            ->getMock();
+        $service = $this->createMock(MoveInterface::class);
 
         $request->expects($this->once())
             ->method('getContent')
             ->willReturn(json_encode($requestContent));
 
-        $container->expects($this->once())
-            ->method("get")
-            ->with($this->equalTo('TicTacToe\Service\MoveService'))
-            ->will($this->returnValue($service));
-
         $controller = new ApiController();
         $controller->setContainer($container);
-        $controller->moveAction($request);
+        $controller->moveAction($service, $request);
     }
 
     /**
